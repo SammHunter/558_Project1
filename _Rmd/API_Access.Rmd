@@ -74,19 +74,16 @@ poke_region <- lapply(poke_region, fromJSON)
 ```{r}
 # Endpoint2 - Pokemon Habitat, if you want all 9 habitats, please put
 # 1:9
-avail_types <- GET("https://pokeapi.co/api/v2/type/?limit=20&offset=0")
-avail_types <- rawToChar(avail_types$content)
-avail_types <- fromJSON(avail_types)
-avail_types <- avail_types[["results"]][["name"]]
-avail_types
+avail_habitat <- GET("https://pokeapi.co/api/v2/pokemon-habitat/?limit=20&offset=0")
+avail_habitat <- rawToChar(avail_habitat$content)
+avail_habitat <- fromJSON(avail_habitat)
+avail_habitat <- avail_habitat[["results"]][["name"]]
 
-url_type <- paste0("https://pokeapi.co/api/v2/type/", c(avail_types))
-poke_type <- lapply(url_type, GET)
-poke_type <-lapply(poke_type, '[[', 'content')
-poke_type <- lapply(poke_type_content, rawToChar)
-poke_type <- lapply(poke_type_raw, fromJSON)
-
-
+url_habitat <- paste0("https://pokeapi.co/api/v2/pokemon-habitat/", c(avail_habitat))
+poke_habitat <- lapply(url_habitat, GET)
+poke_habitat <-lapply(poke_habitat, '[[', 'content')
+poke_habitat <- lapply(poke_habitat, rawToChar)
+poke_habitat <- lapply(poke_habitat, fromJSON)
 ```
 
 
@@ -113,24 +110,16 @@ poke_gen <- lapply(poke_gen, fromJSON)
 # this produces duplicates of the same pokemon, there are 1188 available pokemon
 # include in the function a way to supply the pokemon name, then make it correspond to 
 # the indexing number
-avail_pokemon <- GET("https://pokeapi.co/api/v2/pokemon/?limit=1188&offset=0")
+avail_pokemon <- GET("https://pokeapi.co/api/v2/pokemon/?limit=1200&offset=0")
 avail_pokemon <- rawToChar(avail_pokemon$content)
 avail_pokemon <- fromJSON(avail_pokemon)
 avail_pokemon <- avail_pokemon[["results"]][["name"]]
-sort(avail_pokemon)
 
 url <- paste0("https://pokeapi.co/api/v2/pokemon/",c(avail_pokemon))
-pokemon <- lapply(X = url, FUN = GET)
+poke_list <- lapply(X = url, FUN = GET)
 poke_list<-lapply(pokemon, '[[', 'content')
 poke_list <- lapply(poke_list, rawToChar)
-pokedex <- lapply(poke_list, fromJSON)
-pokedex
-
-# create a function to get rid of the pokemon that just have different skins, 
-# strictly there are 898 pokemon, could make a separate data set of pokemon that
-# are mega versions because they have different power stats
-
-
+poke_list <- lapply(poke_list, fromJSON)
 ```
 
 
