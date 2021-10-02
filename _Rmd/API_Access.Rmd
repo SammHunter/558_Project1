@@ -1,0 +1,150 @@
+---
+title: "558_Project1_Hunter"
+author: "Samantha Hunter"
+date: "9/24/2021"
+output: html_document
+---
+
+```{r}
+library(httr)
+library(jsonlite)
+library(purrr)
+library(dplyr)
+library(tibble)
+```
+
+# Endpoint 1 - Ability - Done with query
+```{r}
+# Endpoint 1
+#Here is an entire list of pokemon ability names
+avail_ability <- GET("https://pokeapi.co/api/v2/ability/?limit=327&offset=0")
+avail_ability <- rawToChar(avail_ability$content)
+avail_ability <- fromJSON(avail_ability)
+avail_ability <- avail_ability[["results"]][["name"]]
+avail_ability
+
+url_ability <- paste0("https://pokeapi.co/api/v2/ability/", c(avail_ability))
+poke_bility <- lapply(url_ability, GET)
+poke_bility<-lapply(poke_bility, '[[', 'content')
+poke_bility <- lapply(poke_bility, rawToChar)
+poke_bility <- lapply(poke_bility, fromJSON)
+
+
+#poke_bility[[1]][["effect_entries"]][["effect"]][1] is just the same thing in german
+generation <- paste0("poke_bility[[",1:327,"]][['generation']][['name']]")
+effect <- paste0("poke_bility[[",1:327,"]][['effect_entries']][['effect']][2]")
+pokemon <- paste0("poke_bility[[", 1:327, "]][['pokemon']][['pokemon']][['name']]") 
+```
+
+
+# Endpoint 2 - Pokemon Type _ Done with Query
+```{r}
+# Endpoint 3 - there are 20 possible types 
+avail_types <- GET("https://pokeapi.co/api/v2/type/?limit=20&offset=0")
+avail_types <- rawToChar(avail_types$content)
+avail_types <- fromJSON(avail_types)
+avail_types <- avail_types[["results"]][["name"]]
+
+url_type <- paste0("https://pokeapi.co/api/v2/type/", c(avail_types))
+poke_type <- lapply(url_type, GET)
+poke_type <-lapply(poke_type, '[[', 'content')
+poke_type <- lapply(poke_type, rawToChar)
+poke_type <- lapply(poke_type, fromJSON)
+
+row1 <-paste0("poke_type_plz[[", 1:20, "]][['name']]")
+```
+
+# Endpoint 3 - Region
+```{r}
+# Pokemon Region - there are 8 of them
+avail_region <- GET("https://pokeapi.co/api/v2/region/?limit=20&offset=0")
+avail_region <- rawToChar(avail_region$content)
+avail_region <- fromJSON(avail_region)
+avail_region <- avail_region[["results"]][["name"]]
+
+url_region <- paste0("https://pokeapi.co/api/v2/region/", c(avail_region))
+poke_region <- lapply(url_region, GET)
+poke_region <- lapply(poke_region, '[[', 'content')
+poke_region <- lapply(poke_region, rawToChar)
+poke_region <- lapply(poke_region, fromJSON)
+```
+
+
+# Endpoint 4 - Habitat
+```{r}
+# Endpoint2 - Pokemon Habitat, if you want all 9 habitats, please put
+# 1:9
+avail_types <- GET("https://pokeapi.co/api/v2/type/?limit=20&offset=0")
+avail_types <- rawToChar(avail_types$content)
+avail_types <- fromJSON(avail_types)
+avail_types <- avail_types[["results"]][["name"]]
+avail_types
+
+url_type <- paste0("https://pokeapi.co/api/v2/type/", c(avail_types))
+poke_type <- lapply(url_type, GET)
+poke_type <-lapply(poke_type, '[[', 'content')
+poke_type <- lapply(poke_type_content, rawToChar)
+poke_type <- lapply(poke_type_raw, fromJSON)
+
+
+```
+
+
+
+
+# Endpoint 5 - Generation
+```{r}
+# There are 7 generations
+avail_gen <- GET("https://pokeapi.co/api/v2/generation/")
+avail_gen <- rawToChar(avail_gen$content)
+avail_gen <- fromJSON(avail_gen)
+avail_gen <- avail_gen[["results"]][["name"]]
+
+url_gen <- paste0("https://pokeapi.co/api/v2/generation/", c(avail_gen))
+poke_gen <- lapply(url_gen, GET)
+poke_gen <- lapply(poke_gen, '[[', 'content')
+poke_gen <- lapply(poke_gen, rawToChar)
+poke_gen <- lapply(poke_gen, fromJSON)
+```
+
+
+# Endpoint 6 - Pokemon Base Stats (from Pokemon)
+```{r}
+# this produces duplicates of the same pokemon, there are 1188 available pokemon
+# include in the function a way to supply the pokemon name, then make it correspond to 
+# the indexing number
+avail_pokemon <- GET("https://pokeapi.co/api/v2/pokemon/?limit=1188&offset=0")
+avail_pokemon <- rawToChar(avail_pokemon$content)
+avail_pokemon <- fromJSON(avail_pokemon)
+avail_pokemon <- avail_pokemon[["results"]][["name"]]
+sort(avail_pokemon)
+
+url <- paste0("https://pokeapi.co/api/v2/pokemon/",c(avail_pokemon))
+pokemon <- lapply(X = url, FUN = GET)
+poke_list<-lapply(pokemon, '[[', 'content')
+poke_list <- lapply(poke_list, rawToChar)
+pokedex <- lapply(poke_list, fromJSON)
+pokedex
+
+# create a function to get rid of the pokemon that just have different skins, 
+# strictly there are 898 pokemon, could make a separate data set of pokemon that
+# are mega versions because they have different power stats
+
+
+```
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
