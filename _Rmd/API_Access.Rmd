@@ -11,6 +11,7 @@ library(jsonlite)
 library(purrr)
 library(dplyr)
 library(tibble)
+library(purrr)
 ```
 
 # Endpoint 1 - Ability - Done with query
@@ -23,17 +24,24 @@ avail_ability <- fromJSON(avail_ability)
 avail_ability <- avail_ability[["results"]][["name"]]
 avail_ability
 
-url_ability <- paste0("https://pokeapi.co/api/v2/ability/", c(avail_ability))
-poke_bility <- lapply(url_ability, GET)
-poke_bility<-lapply(poke_bility, '[[', 'content')
-poke_bility <- lapply(poke_bility, rawToChar)
-poke_bility <- lapply(poke_bility, fromJSON)
+ability <- function(name, ...){
+  url_ability <- paste0("https://pokeapi.co/api/v2/ability/", c(name, ...))
+  poke_bility <- lapply(url_ability, GET)
+  poke_bility<-lapply(poke_bility, '[[', 'content')
+  poke_bility <- lapply(poke_bility, rawToChar)
+  poke_bility <- lapply(poke_bility, fromJSON)
+  return(poke_bility)
+}
 
+# THIS WORKS :)
+stench <- ability("stench", "drizzle")
 
-#poke_bility[[1]][["effect_entries"]][["effect"]][1] is just the same thing in german
-generation <- paste0("poke_bility[[",1:327,"]][['generation']][['name']]")
-effect <- paste0("poke_bility[[",1:327,"]][['effect_entries']][['effect']][2]")
-pokemon <- paste0("poke_bility[[", 1:327, "]][['pokemon']][['pokemon']][['name']]") 
+ability <- map(poke_bility, "name")
+pokemon_ability <- map(map(map(poke_bility, "pokemon"), "pokemon"), "name")
+generation <- map(map(poke_bility, "generation"), "name")
+#battle_effect <- map(map(poke_bility, "effect_entries"), "effect")
+#poke_bility[[1]][["effect_changes"]][["effect_entries"]][[1]][["effect"]][[2]]
+
 ```
 
 
@@ -51,7 +59,14 @@ poke_type <-lapply(poke_type, '[[', 'content')
 poke_type <- lapply(poke_type, rawToChar)
 poke_type <- lapply(poke_type, fromJSON)
 
-row1 <-paste0("poke_type_plz[[", 1:20, "]][['name']]")
+type <- map(poke_type, "name")
+pokemon_type <- map(map(map(poke_type, "pokemon"), "pokemon"), "name")
+double_from <- map(map(map(poke_type, "damage_relations"), "double_damage_from"), "name")
+half_from <- map(map(map(poke_type, "damage_relations"), "half_damage_from"), "name")
+no_from <- map(map(map(poke_type, "damage_relations"), "no_damage_from"), "name")
+double_to <- map(map(map(poke_type, "damage_relations"), "double_damage_to"), "name")
+half_to <- map(map(map(poke_type, "damage_relations"), "half_damage_to"), "name")
+no_to <- map(map(map(poke_type, "damage_relations"), "no_damage_to"), "name")
 ```
 
 # Endpoint 3 - Region
@@ -84,24 +99,32 @@ poke_habitat <- lapply(url_habitat, GET)
 poke_habitat <-lapply(poke_habitat, '[[', 'content')
 poke_habitat <- lapply(poke_habitat, rawToChar)
 poke_habitat <- lapply(poke_habitat, fromJSON)
+
+habitat <- map(poke_habitat, "name")
+pokemon_habitat <- map(map(poke_habitat, "pokemon_species"), "name")
 ```
 
 
 
 
-# Endpoint 5 - Generation
+# Endpoint 5 - Berries
 ```{r}
-# There are 7 generations
-avail_gen <- GET("https://pokeapi.co/api/v2/generation/")
-avail_gen <- rawToChar(avail_gen$content)
-avail_gen <- fromJSON(avail_gen)
-avail_gen <- avail_gen[["results"]][["name"]]
+# There are 64 Berry Types
+avail_berry <- GET("https://pokeapi.co/api/v2/berry?offset=0&limit=200")
+avail_berry <- rawToChar(avail_berry$content)
+avail_berry <- fromJSON(avail_berry)
+avail_berry <- avail_berry[["results"]][["name"]]
 
-url_gen <- paste0("https://pokeapi.co/api/v2/generation/", c(avail_gen))
-poke_gen <- lapply(url_gen, GET)
-poke_gen <- lapply(poke_gen, '[[', 'content')
-poke_gen <- lapply(poke_gen, rawToChar)
-poke_gen <- lapply(poke_gen, fromJSON)
+url_berry <- paste0("https://pokeapi.co/api/v2/berry/", c(avail_berry))
+poke_berry <- lapply(url_berry, GET)
+poke_berry <- lapply(poke_berry, '[[', 'content')
+poke_berry <- lapply(poke_berry, rawToChar)
+poke_berry <- lapply(poke_berry, fromJSON)
+
+berries <- as.vector(map(poke_berry, "name"))
+growth_time <- as.vector(map(poke_berry, "growth_time"))
+max_harvest <- as.vector(map(poke_berry, "max_harvest"))
+
 ```
 
 
@@ -116,10 +139,33 @@ avail_pokemon <- fromJSON(avail_pokemon)
 avail_pokemon <- avail_pokemon[["results"]][["name"]]
 
 url <- paste0("https://pokeapi.co/api/v2/pokemon/",c(avail_pokemon))
-poke_list <- lapply(X = url, FUN = GET)
-poke_list<-lapply(pokemon, '[[', 'content')
-poke_list <- lapply(poke_list, rawToChar)
-poke_list <- lapply(poke_list, fromJSON)
+pokedex <- lapply(X = url, FUN = GET)
+pokedex<-lapply(pokedex, '[[', 'content')
+pokedex <- lapply(pokedex, rawToChar)
+pokedex <- lapply(pokedex, fromJSON)
+
+pokemon <- map(pokedex, "name")
+base_stat <- map(map(pokedex, "stats"), "base_stat")
+
+length(pokemon)
+base_stat[[1]][1]
+
+hp <- rep(0, 5)
+attack <- rep(0, 5)
+defense <- rep(0, 5)
+sp_attack <- rep(0, 5)
+sp_defense <- rep(0, 5)
+speed <- rep(0, 5)
+
+for(p in 5){
+  hp <- base_stat[[p]][1]
+  attack  <- base_stat[[p]][2]
+  defense <- base_stat[[p]][3]
+  sp_attack <- base_stat[[p]][4]
+  sp_defense <- base_stat[[p]][5]
+  speed <- base_stat[[p]][6]
+}
+
 ```
 
 
