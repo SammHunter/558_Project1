@@ -6,20 +6,23 @@ output: html_document
 ---
 
 ```{r}
+# Library for reading data from the API
 library(httr)
 library(jsonlite)
+
+# Unlisting 
 library(purrr)
+library(data.table)
+
+# Data Manipulation
 library(dplyr)
+library(tidyr)
 library(tibble)
-
-# map function
-library(purrr)
-
-# ldply function
-library(plyr)
+library(datasets)
+library(ggplot2)
 ```
 
-# Endpoint 1 - Ability - Join Tibbles!
+# Endpoint 1 - Ability
 ```{r}
 # Endpoint 1
 #Here is an entire list of pokemon ability names
@@ -31,36 +34,32 @@ avail_ability <- avail_ability[["results"]][["name"]]
 ability <- function(name, ...){
   url_ability <- paste0("https://pokeapi.co/api/v2/ability/", c(name, ...))
   poke_bility <- lapply(url_ability, GET)
-  poke_bility<-lapply(poke_bility, '[[', 'content')
+  poke_bility <- lapply(poke_bility, '[[', 'content')
   poke_bility <- lapply(poke_bility, rawToChar)
   poke_bility <- lapply(poke_bility, fromJSON)
-}
+  
+  abilities <- (map(poke_bility, "name"))
+  ability_pokemon <- (map(map(map(poke_bility, "pokemon"), "pokemon"), "name"))
+  ability_generation <- map(map(poke_bility, "generation"), "name")
 
-abilities <- (map(poke_bility, "name"))
-ability_pokemon <- (map(map(map(poke_bility, "pokemon"), "pokemon"), "name"))
-ability_generation <- map(map(poke_bility, "generation"), "name")
-
-# probs needs to be Pokemon_Ability <- list(rep(0, length(abilities)))
-Pokemon_Ability <- list(rep(0, 5))
-for(a in 1:5){
-  ab_pokemon <- unlist(ability_pokemon[a])
-  ab <- rep(abilities[a], length(ability_pokemon[a]))
-  ab_gen <- rep(ability_generation[a], length(ability_pokemon[a]))
-  Pokemon_Ability[[a]] <- as.tibble(cbind(ab_pokemon, ab, ab_gen))
+  Pokemon_Ability <- list(rep(0, length(unlist(ability_pokemon))))
+    for(a in 1:length(ability_pokemon)){
+      Pokemon <- unlist(ability_pokemon[a])
+      Ability <- rep(abilities[[a]], length(ability_pokemon[a]))
+      Generation <- rep(ability_generation[[a]], length(ability_pokemon[a]))
+      Pokemon_Ability[[a]] <- as_tibble(cbind(Pokemon, Ability, Generation))
+    }
+  
+  Pokemon_Ability <- rbindlist(Pokemon_Ability, fill = TRUE)
+  return(Pokemon_Ability)
 }
 
 # THIS WORKS :)
-stench <- ability("stench", "drizzle")
-
-# https://stackoverflow.com/questions/47254147/how-to-convert-multiple-lists-into-one-dataframer t
-
-#battle_effect <- map(map(poke_bility, "effect_entries"), "effect")
-#poke_bility[[1]][["effect_changes"]][["effect_entries"]][[1]][["effect"]][[2]]
-
+stench <- ability("stench", "speed-boost")
 ```
 
 
-# Endpoint 2 - Pokemon Type _ Join Tibbles!
+# Endpoint 2 - Pokemon Type
 ```{r}
 # Endpoint 3 - there are 20 possible types 
 avail_types <- GET("https://pokeapi.co/api/v2/type/?limit=20&offset=0")
@@ -74,98 +73,59 @@ type <- function(name, ...){
   poke_type <-lapply(poke_type, '[[', 'content')
   poke_type <- lapply(poke_type, rawToChar)
   poke_type <- lapply(poke_type, fromJSON)
-  return(poke_type)
-}
-
-remove(no_to)
-
-type <- map(poke_type, "name")
-type_pokemon <- map(map(map(poke_type, "pokemon"), "pokemon"), "name")
-type_double_from <- map(map(map(poke_type, "damage_relations"), "double_damage_from"), "name")
-type_half_from <- map(map(map(poke_type, "damage_relations"), "half_damage_from"), "name")
-type_no_from <- map(map(map(poke_type, "damage_relations"), "no_damage_from"), "name")
-type_double_to <- map(map(map(poke_type, "damage_relations"), "double_damage_to"), "name")
-type_half_to <- map(map(map(poke_type, "damage_relations"), "half_damage_to"), "name")
-type_no_to <- map(map(map(poke_type, "damage_relations"), "no_damage_to"), "name")
-
-Pokemon_Type <- list(rep(0, 5))
-for(a in 1:5){
-  pokemon <- unlist(type_pokemon[a])
-  type <- rep(type[a], length(type_pokemon[a]))
-  double_from <- rep(type_double_from[a], length(type_pokemon[a]))
-  double_to <- rep(type_double_to[a], length(type_pokemon[a]))
-  half_from <- rep(type_half_from[a], length(type_pokemon[a]))
-  half_to <- rep(type_half_to[a], length(type_pokemon[a]))
-  no_from <- rep(type_no_from[a], length(type_pokemon[a]))
-  no_to <- rep(type_no_to[a], length(type_pokemon[a]))
   
-  Pokemon_Type[[a]] <- as.tibble(cbind(pokemon, type, double_from, 
-                                    double_to, half_from, half_to, 
-                                    no_from, no_to))
+  types <- map(poke_type, "name")
+  type_pokemon <- map(map(map(poke_type, "pokemon"), "pokemon"), "name")
+  
+  Pokemon_Type <- list(rep(0, length(unlist(types))))
+  for(a in 1:length(types)){
+    Pokemon <- unlist(type_pokemon[a])
+    Type <- rep(types[[a]], length(type_pokemon[a]))
+    Pokemon_Type[[a]] <- as_tibble(cbind(Pokemon, Type))
+  }
+  Pokemon_Type <- rbindlist(Pokemon_Type)
+  return(Pokemon_Type)
 }
 
-```
-
-# Endpoint 3 - Region - Join Tibbles! 
-```{r}
-# Pokemon Region - there are 8 of them
-avail_region <- GET("https://pokeapi.co/api/v2/region/?limit=20&offset=0")
-avail_region <- rawToChar(avail_region$content)
-avail_region <- fromJSON(avail_region)
-avail_region <- avail_region[["results"]][["name"]]
-
-region <- function(name, ...){
-  url_region <- paste0("https://pokeapi.co/api/v2/region/", c(name, ...))
-  poke_region <- lapply(url_region, GET)
-  poke_region <- lapply(poke_region, '[[', 'content')
-  poke_region <- lapply(poke_region, rawToChar)
-  poke_region <- lapply(poke_region, fromJSON)
-  return(poke_region)
-}
-
-regions <- map(poke_region, "name")
-regions_loc <- map(map(poke_region, "locations"), "name")
-region_gen <- map(map(poke_region, "main_generation"), "name")
-region_game <- map(map(poke_region, "version_groups"), "name")
-
-Pokemon_Regions <- list(rep(0, 5))
-for(a in 1:5){
-  locations <- unlist(regions_loc[a])
-  region <- rep(regions[a], length(regions_loc[a]))
-  region_gen <- rep(region_gen[a], length(regions_loc[a]))
-  region_game <- rep(region_game[a], length(regions_loc[a]))
-  Pokemon_Regions[[a]] <- as.tibble(cbind(region, locations,
-                                      region_gen, region_game))
-}
+# This works
+fly <- type("flying", "fighting")
 ```
 
 
-Make function & turn into one data frame
+# Endpoint 3 - Generation
 ```{r}
 avail_gen <- GET("https://pokeapi.co/api/v2/generation/")
 avail_gen <- rawToChar(avail_gen$content)
 avail_gen <- fromJSON(avail_gen)
 avail_gen <- avail_gen[["results"]][["name"]]
 
-url_gen <- paste0("https://pokeapi.co/api/v2/generation/", c(avail_gen))
-poke_gen <- lapply(url_gen, GET)
-poke_gen <- lapply(poke_gen, '[[', 'content')
-poke_gen <- lapply(poke_gen, rawToChar)
-poke_gen <- lapply(poke_gen, fromJSON)
+generation <- function(name, ...){
+  url_gen <- paste0("https://pokeapi.co/api/v2/generation/", c(name, ...))
+  poke_gen <- lapply(url_gen, GET)
+  poke_gen <- lapply(poke_gen, '[[', 'content')
+  poke_gen <- lapply(poke_gen, rawToChar)
+  poke_gen <- lapply(poke_gen, fromJSON)
 
-gen <- map(poke_gen, "name")
-gen_poke <- map(map(poke_gen, "pokemon_species"), "name")
+  gen <- map(poke_gen, "name")
+  gen_poke <- map(map(poke_gen, "pokemon_species"), "name")
 
-Pokemon_Generation <- list(rep(0, 5))
-for(a in 1:5){
-  pokemon <- unlist(gen_poke[a])
-  generation <- rep(gen[a], length(gen_poke[a]))
-  Pokemon_Generation[[a]] <- as.tibble(cbind(generation, pokemon))
+  Pokemon_Generation <- list(rep(0, length(unlist(gen_poke))))
+  for(a in 1:length(gen_poke)){
+    Pokemon <- unlist(gen_poke[a])
+    Generation <- rep(gen[[a]], length(gen_poke[a]))
+    Pokemon_Generation[[a]] <- as.tibble(cbind(Generation, Pokemon))
+  }
+  Pokemon_Generation <- rbindlist(Pokemon_Generation)
+  return(Pokemon_Generation)
 }
+
+# This works
+# Generation23 <- generation("generation-ii", "generation-iii")
+
 ```
 
 
-# Endpoint 4 - Habitat
+# Endpoint 4 - Habitat - Include Function for single Data Frame
 ```{r}
 # Endpoint2 - Pokemon Habitat, if you want all 9 habitats, you can also use 1:9
 # I've attached these next lines in case you don't know what habitats are available
@@ -175,27 +135,28 @@ avail_habitat <- rawToChar(avail_habitat$content)
 avail_habitat <- fromJSON(avail_habitat)
 avail_habitat <- avail_habitat[["results"]][["name"]]
 
+# This function works! 
 habitat <- function(name, ...){
   url_habitat <- paste0("https://pokeapi.co/api/v2/pokemon-habitat/", c(name, ...))
   poke_habitat <- lapply(url_habitat, GET)
   poke_habitat <-lapply(poke_habitat, '[[', 'content')
   poke_habitat <- lapply(poke_habitat, rawToChar)
   poke_habitat <- lapply(poke_habitat, fromJSON)
-  return(poke_habitat)
-}
+  
+  habitat <- map(poke_habitat, "name")
+  habitat_poke <- map(map(poke_habitat, "pokemon_species"), "name")
 
-habitat <- map(poke_habitat, "name")
-habitat_poke <- map(map(poke_habitat, "pokemon_species"), "name")
-
-Pokemon_Habitat <- list(rep(0, 5))
-for(a in 1:5){
-  pokemon <- unlist(habitat_poke[a])
-  hab <- rep(habitat[a], length(habitat_poke[a]))
-  Pokemon_Habitat[[a]] <- as.tibble(cbind(hab, pokemon))
+  Pokemon_Habitat <- list(rep(0, length(unlist(habitat_poke))))
+  for(a in 1:length(habitat_poke)){
+    Pokemon <- unlist(habitat_poke[a])
+    Habitat <- rep(habitat[[a]], length(habitat_poke[a]))
+    Pokemon_Habitat[[a]] <- as.tibble(cbind(Habitat, Pokemon))
+  }
+  Pokemon_Habitat <- rbindlist(Pokemon_Habitat)
+  return(Pokemon_Habitat)
+  
 }
 ```
-
-
 
 
 # Endpoint 5 - Berries - HAVE TIBBLE OUTPUT
@@ -222,11 +183,11 @@ berry <- function(name, ...){
 }
 
 # It works
-berry("cheri", "chesto")
+# berry("cheri", "chesto")
 ```
 
 
-# Endpoint 6 - Pokemon Base Stats (from Pokemon) - DATA FRAME ACQUIRED
+# Endpoint 6 - Pokemon Base Stats (from Pokemon) - HAVE TIBBLE OUTPUT
 ```{r}
 # this produces duplicates of the same pokemon, there are 1188 available pokemon
 # include in the function a way to supply the pokemon name, then make it correspond to 
@@ -247,7 +208,7 @@ poke_stats <- function(name, ...){
   pokemon_stat <- map(pokedex, "name")
   base_stat <- map(map(pokedex, "stats"), "base_stat")
 
-  poke_statly <- rep(0, length(pokemon_stat))
+  Pokemon <- rep(0, length(pokemon_stat))
   hp <- rep(0, length(pokemon_stat))
   attack  <- rep(0, length(pokemon_stat))
   defense <- rep(0, length(pokemon_stat))
@@ -256,28 +217,162 @@ poke_stats <- function(name, ...){
   speed <- rep(0, length(pokemon_stat))
 
   for(p in 1:length(pokemon_stat)){
-    poke_statly[p] <- pokemon_stat[[p]]
-    hp[p] <- base_stat[[p]][1]
+    Pokemon[p] <- pokemon_stat[[p]]
+    hp[p] <- as.numeric(base_stat[[p]][1])
     attack[p]  <- base_stat[[p]][2]
     defense[p] <- base_stat[[p]][3]
     sp_attack[p] <- base_stat[[p]][4]
     sp_defense[p] <- base_stat[[p]][5]
     speed[p] <- base_stat[[p]][6]
   }
-  Pokemon_Stats <- as_tibble(cbind(poke_statly, hp, attack, defense, sp_attack, sp_defense, speed))
+  Pokemon_Stats <- as_tibble(cbind(Pokemon, hp, attack, defense, sp_attack, sp_defense, speed))
+  
+  for(s in 2:7){
+      Pokemon_Stats[[s]] <- as.numeric(Pokemon_Stats[[s]])
+  }
+  
   return(Pokemon_Stats)
 }
 
-poke_stats(1:400)
+
+```
+
+
+# Exploratory Data Analysis
+
+I only need the first 898 pokemon (https://www.wargamer.com/pokemon-trading-card-game/how-many-pokemon-are-there). The PokeAPI is structured so that the first 898 Pokemon are the strict unique species, 
+while the rest are types of the species that may have a different regional
+form or are evolved in a special way that grants them special base stats. I 
+only wanted to analyze the base stats from 'normal' pokemon, because in-game
+a trainer can manipulate the stats of their pokemon through berries 
+and other in-game items. 
+
+
+Here I am just grabbing the datasets that I need. 
+```{r}
+# Creating a new variable that is the sum of the other statistics
+
+# Creating Data Frames
+Pokemon_Habitat <- habitat(avail_habitat)
+Pokemon_Stats <- poke_stats(avail_pokemon)
+Pokemon_Ability <- ability(avail_ability)
+Pokemon_Generation <- generation(avail_gen)
+Pokemon_Stats <- Pokemon_Stats[1:898, ]
+
+
+Pokemon_Stats <- Pokemon_Stats %>% mutate(total_stats = hp + attack + defense + 
+                    sp_attack + sp_defense + speed) 
+Pokemon_Stats <- merge(Pokemon_Stats, Pokemon_Generation, by = "Pokemon")
+
+sort(Pokemon_Types$Pokemon)
+Pokemon_Type1 <- filter(Pokemon_Types, duplicated(Pokemon_Types$Pokemon) == FALSE)
+Pokemon_Type2 <- filter(Pokemon_Types, duplicated(Pokemon_Types$Pokemon) == TRUE)
+
+Pokemon_Type1 <- rename(Pokemon_Type1, Type1 = Type)
+Pokemon_Type2 <- rename(Pokemon_Type2, Type2 = Type)
+
+# I just want a left join because Pokemon Stats contains the "mega"
+# pokemon
+Pokemon_Type_Stats <- merge(Pokemon_Stats, Pokemon_Type1, 
+                            by = "Pokemon", all.x = TRUE)
+Pokemon_Type_Stats <- merge(Pokemon_Type_Stats, Pokemon_Type2, 
+                            by = "Pokemon", all.x = TRUE)
+
+# There are no Pokemon unknown or shadow types, so we only need to 
+# query the first 18 types
+Pokemon_Types <- type(1:18)
+```
+
+Table of Habitat Locations of Pokemon by Generation
+```{r}
+Habitat_Gen <- merge(Pokemon_Habitat, Pokemon_Generation, by = "Pokemon")
+table(Habitat_Gen$Habitat, Habitat_Gen$Generation)
+
+Pokemon_Gen_Plot <- ggplot(data = Pokemon_Stats) + 
+  geom_bar(aes = mapping(x = Generation))
+```
+
+
+After seeing this table, I did some investigating on Bulbagarden(https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_habitat) and
+Bulbapedia(https://bulbapedia.bulbagarden.net/wiki/Talk:List_of_Pok%C3%A9mon_by_habitat). I found out that the habitat classifications are only a feature in FireRed and LeafGreen, remakes of the original 1996 Red and Green games. This explains why
+there are no observations included in our contingency table after Generation
+III. 
+
+
+Is there a power creep between generations of pokemon?
+```{r}
+Summary_hp <- Pokemon_Stats %>% group_by(Generation) %>%
+  summarise(min_hp = min(hp), avg_hp = round(mean(hp)), max_hp = max(hp))
+
+Summary_attack <- Pokemon_Stats %>% group_by(Generation) %>%
+  summarise(min_attack = min(attack), avg_attack = round(mean(attack)),
+            max_attack = max(attack))
+
+Summary_defense <- Pokemon_Stats %>% group_by(Generation) %>%
+  summarise(min_defense = min(defense), avg_defense = round(mean(defense)),
+            max_defense = max(defense))
+
+Summary_sp_attack <- Pokemon_Stats %>% group_by(Generation) %>%
+  summarise(min_sp_attack = min(sp_attack), avg_sp_attack = round(mean(sp_attack)),
+            max_sp_attack = max(sp_attack))
+
+Summary_sp_defense <- Pokemon_Stats %>% group_by(Generation) %>%
+  summarise(min_sp_defense = min(sp_defense), 
+            avg_sp_defense = round(mean(sp_defense)),
+            max_sp_defense = max(sp_defense))
+
+Summary_speed <- Pokemon_Stats %>% group_by(Generation) %>%
+  summarise(min_speed = min(speed), avg_speed = round(mean(speed)),
+            max_speed = max(speed))
+
+Summary_total_stats <- Pokemon_Stats %>% group_by(Generation) %>%
+  summarise(min_total_stats = min(total_stats), 
+            avg_total_stats = round(mean(total_stats)),
+            max_total_stats = max(total_stats))
+
+Summary_hp
+Summary_attack
+Summary_defense
+Summary_sp_attack
+Summary_sp_defense
+Summary_speed
+Summary_total_stats
 ```
 
 
 ```{r}
+Stat_Boxplot <- ggplot(data = Pokemon_Stats)
+
+Stat_Boxplot + 
+  geom_boxplot(mapping = aes(x = total_stats, y = Generation, color = Generation))
+
+Stat_Boxplot + 
+  geom_boxplot(mapping = aes(x = hp, y = Generation, color = Generation))
+
+Stat_Boxplot + 
+  geom_boxplot(mapping = aes(x = attack, y = Generation, color = Generation))
+
+Stat_Boxplot + 
+  geom_boxplot(mapping = aes(x = defense, y = Generation, color = Generation))
+
+Stat_Boxplot + 
+  geom_boxplot(mapping = aes(x = sp_attack, y = Generation, color = Generation))
+
+Stat_Boxplot + 
+  geom_boxplot(mapping = aes(x = sp_defense, y = Generation, color = Generation))
+
+Stat_Boxplot + 
+  geom_boxplot(mapping = aes(x = speed, y = Generation, color = Generation))
 
 ```
 
 
 
+```{r}
+
+
+table(Pokemon_Type_Stats$Type1, Pokemon_Type_Stats$Type2)
+```
 
 
 
