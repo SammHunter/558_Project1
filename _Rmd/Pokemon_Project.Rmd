@@ -366,13 +366,25 @@ Pokemon_Type_Stats <- merge(Pokemon_Type_Stats, Pokemon_Type2,
 # value for Type2 if Type2 is blank. 
 Pokemon_Type_Stats <- Pokemon_Type_Stats %>% mutate(
   Type2 = if_else(is.na(Type2) == TRUE, Type1, Type2))
+
+# Using the Quantile Stats, we're also going to make a categorical 
+# variable based on the Pokemon's total stats
+quantile(Pokemon_Type_Stats$total_stats)
+
+# Here the categories split the total_stats into four groups, based on the 
+# data quantiles. 
+Pokemon_Type_Stats <- Pokemon_Type_Stats %>% mutate(
+  TypeCat = if_else(total_stats <= 320, "poor", 
+                if_else(total_stats <= 430.5, "fair", 
+                    if_else(total_stats <= 500, "good", "great"))), 
+  TypeCat = factor(TypeCat, levels = c("poor", "fair", "good", "great")),)
+
 ```
 
 
 ### Pokemon Attribute Exploration
 
-Here we're just getting a feel for the data set and viewing how the Pokemon
-games may have changed over the course of generations. 
+Here we're just getting a feel for the data set and viewing how the Pokemon games may have changed over the course of generations. 
 
 ```{r}
 # Here I'm doing a full join of the Pokemon_Habitat and Pokemon_Generation
@@ -385,144 +397,111 @@ table(Habitat_Gen$Habitat, Habitat_Gen$Generation)
 ```
 
 
+I thought it was surprising that habitats were only provided up to Generation III of the games. According to Bulbagarden(https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_habitat) and Bulbapedia(https://bulbapedia.bulbagarden.net/wiki/Talk:List_of_Pok%C3%A9mon_by_habitat), the habitat classifications are only a feature in FireRed and LeafGreen, which are reboots of the 1996 Red and Green games. This explains why there are no observations included in our contingency table after Generation III.
+
+
 ```{r}
-Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
-  geom_bar(aes(fill = Generation)) +
-  labs(title = "Pokemon Generation", x = "First Gen Appearance",
-       y = "Pokemon Counts") +
-  theme(axis.text.x=element_text(angle=45))
-Pokemon_Gen_Plot
-
-
-Pokemon_Hab_Plot <- ggplot(data = Pokemon_Habitat, aes(x = Habitat)) +
-  geom_bar(aes(fill = Habitat)) +
-  labs(title = "Where Pokemon Can Be Found?", x = "Pokemon Habitats",
-       y = "Pokemon Counts") +
-  theme(axis.text.x=element_text(angle=45))
-Pokemon_Hab_Plot
-
-
 Pokemon_Type_Plot <- ggplot(data = Pokemon_Types, aes(x = Type)) +
   geom_bar(aes(fill = Type)) +
+  labs(title = "Prevalent Pokemon Types", x = "Pokemon Habitats",
+     y = "Pokemon Counts") +
   theme(axis.text.x=element_text(angle=45))
 Pokemon_Type_Plot
 
-PH <- addmargins(table(Pokemon_Type_Stats$Type1, Pokemon_Type_Stats$Type2))
+addmargins(table(Pokemon_Type_Stats$Type1, Pokemon_Type_Stats$Type2))
 ```
 
-
-After seeing this table, I did some investigating on Bulbagarden(https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_habitat) and Bulbapedia(https://bulbapedia.bulbagarden.net/wiki/Talk:List_of_Pok%C3%A9mon_by_habitat). I found out that the habitat classifications are only a feature in FireRed and LeafGreen, which are reboots of the original 1996 Red and Green games. This explains why there are no observations included in our contingency table after GenerationIII.
-
-
-### Is there a power creep between generations of pokemon?
+### Exploring Generations
+##### Is there a power creep between generations of pokemon?
 ```{r}
-Summary_hp <- Pokemon_Stats %>% group_by(Generation) %>%
-  summarise(min_hp = min(hp), avg_hp = round(mean(hp)), max_hp = max(hp))
+Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
+  geom_bar(aes(fill = Generation)) +
+  labs(title = "Number of Pokemon Per Generation", x = "First Gen Appearance",
+       y = "Pokemon Counts") +
+  theme(axis.text.x=element_text(angle=45))
+Pokemon_Gen_Plot
+```
 
-Summary_attack <- Pokemon_Stats %>% group_by(Generation) %>%
-  summarise(min_attack = min(attack), avg_attack = round(mean(attack)),
-            max_attack = max(attack))
+So we can see that the Generations with the most Pokemon cohorts is Generation I and Generation V, both which have about 150 Pokemon added for each game. Generation VI is the smallest group of new Pokemon, only adding about 75 more. We should expect that there should be proportional representation of generally strong and generally weak Pokemon in each group. That means we should expect about twice as many strong and weak Pokemon in Generations I and V than in Generation VI, and all the other Generations should fall somewhere between them. 
 
-Summary_defense <- Pokemon_Stats %>% group_by(Generation) %>%
-  summarise(min_defense = min(defense), avg_defense = round(mean(defense)),
-            max_defense = max(defense))
+```{r}
+Pokemon_Gen_Plot <- ggplot(data = Pokemon_Type_Stats, aes(x = TypeCat)) +
+  geom_bar(aes(fill = TypeCat)) +
+  labs(title = "Number of Pokemon Per Generation", x = "First Gen Appearance",
+       y = "Pokemon Counts") +
+  facet_wrap(vars(Generation)) +
+  theme(axis.text.x=element_text(angle=45))
+Pokemon_Gen_Plot
 
-Summary_sp_attack <- Pokemon_Stats %>% group_by(Generation) %>%
-  summarise(min_sp_attack = min(sp_attack), avg_sp_attack = round(mean(sp_attack)),
-            max_sp_attack = max(sp_attack))
+table(Pokemon_Type_Stats$Generation, Pokemon_Type_Stats$TypeCat)
+```
 
-Summary_sp_defense <- Pokemon_Stats %>% group_by(Generation) %>%
-  summarise(min_sp_defense = min(sp_defense),
-            avg_sp_defense = round(mean(sp_defense)),
-            max_sp_defense = max(sp_defense))
+While there clearly isn't the same proportion of poor, fair, good, and great Pokemon added to each generations, it does not seem that there is any pattern between the Pokemon's total base stats and in what generation they were added. Generation I, II, Generation III do seem to lack great Pokemon, but so does Generation V. Generation IV has the most "great" Pokemon. Because these a categorical variables as well, there is no quantify how much better Generation IV Pokemon are than say Generation II. In otherwords, Generation IV could have most of their great Pokemon, just barely in the upper quantile of the total_stats group. 
 
-Summary_speed <- Pokemon_Stats %>% group_by(Generation) %>%
-  summarise(min_speed = min(speed), avg_speed = round(mean(speed)),
-            max_speed = max(speed))
 
-Summary_total_stats <- Pokemon_Stats %>% group_by(Generation) %>%
+```{r}
+# Creating a function to return the first quantile of a column
+quant1 <- function(col){
+  quant <- quantile(col)
+  return(quant[2])
+}
+
+# Creating a function to return the third quantile of a column
+quant3 <- function(col){
+  quant <- quantile(col)
+  return(quant[4])
+}
+
+Summary_total_stats <- Pokemon_Type_Stats %>% group_by(Generation) %>%
   summarise(min_total_stats = min(total_stats),
-            avg_total_stats = round(mean(total_stats)),
+            q1_total_stats = round(quant1(total_stats)),
+            avg_total_stats = round(mean(total_stats)), 
+            q3_total_stats = round(quant3(total_stats)),
             max_total_stats = max(total_stats))
-
-Summary_hp
-Summary_attack
-Summary_defense
-Summary_sp_attack
-Summary_sp_defense
-Summary_speed
 Summary_total_stats
 ```
 
+Here we have the spread of the data of the total_stats for each generation of game. I do think that the max of Generation IV is surprisingly high at 720, while all the other maximum total_stats for each generation is either 680 or 690. Generation IV also has the strongest "weakest" Pokemon. The lowest total_stat for Generation IV is 255, while the next closes two are 200. The absolute lowest total_stat score comes from Generation VIII, taking on a value of 180. All the averages of the total_stats hang around 400 to 450, with the highest total_stats coming from Generation VII and Generation IV, at 452 and 442, respectively. Clearly, Generation IV has some of the strongest Pokemon, based on total_stats. This does not support the idea that Pokemon have gotten progressively stronger as the franchise has continued making games. 
+
 
 ```{r}
-Stat_Boxplot <- ggplot(data = Pokemon_Stats)
-
-Stat_Boxplot +
+Stat_Boxplot <- ggplot(data = Pokemon_Stats) +
   geom_boxplot(mapping = aes(x = total_stats, y = Generation, color = Generation)) +
   coord_flip() +
   theme(axis.text.x=element_text(angle=45))
-
-Stat_Boxplot +
-  geom_boxplot(mapping = aes(x = hp, y = Generation, color = Generation)) +
-  coord_flip() +
-  theme(axis.text.x=element_text(angle=45))
-
-Stat_Boxplot +
-  geom_boxplot(mapping = aes(x = attack, y = Generation, color = Generation)) +
-  coord_flip() +
-  theme(axis.text.x=element_text(angle=45))
-
-Stat_Boxplot +
-  geom_boxplot(mapping = aes(x = defense, y = Generation, color = Generation)) +
-  coord_flip() +
-  theme(axis.text.x=element_text(angle=45))
-
-Stat_Boxplot +
-  geom_boxplot(mapping = aes(x = sp_attack, y = Generation, color = Generation)) +
-  coord_flip() +
-  theme(axis.text.x=element_text(angle=45))
-
-Stat_Boxplot +
-  geom_boxplot(mapping = aes(x = sp_defense, y = Generation, color = Generation)) +
-  coord_flip() +
-  theme(axis.text.x=element_text(angle=45))
-
-Stat_Boxplot +
-  geom_boxplot(mapping = aes(x = speed, y = Generation, color = Generation)) +
-  coord_flip() +
-  theme(axis.text.x=element_text(angle=45))
+Stat_Boxplot
 ```
+
+
 
 ```{r}
 Stat_Hist <- ggplot(data = Pokemon_Stats)+
   geom_histogram(mapping = aes(x = total_stats)) +
   facet_wrap(vars(Generation))
-
 Stat_Hist
 ```
 
+
+Because we didn't find any evidence that the total base stats between Pokemon of different generations were different, I thought I may look to see if there was a relationship between the three main base stats - HP, attack, and defense. I think it would make sense that attack and defense may be inversely related since they're opposites of each other in a video game. 
 
 ```{r}
 HP_Defense <- ggplot(data = Pokemon_Stats, aes(x = hp, y = defense)) +
   geom_point(aes(color = Generation))
 HP_Defense
-
-HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
-  geom_point(aes(color = Generation))
-HP_Attack
-
-Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
-  geom_point(aes(color = Generation))
-Defense_Attack
-
-Stats_Generation <- lm(total_stats ~ Generation, data = Pokemon_Stats)
-Stats_Generation
 ```
-
-
 
 
 ```{r}
-
+HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
+  geom_point(aes(color = Generation))
+HP_Attack
 ```
+
+
+```{r}
+Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
+  geom_point(aes(color = Generation))
+Defense_Attack
+```
+
+
