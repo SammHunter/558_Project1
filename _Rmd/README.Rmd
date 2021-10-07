@@ -8,7 +8,7 @@ output: html_document
 ```{r echo=FALSE, message = FALSE, eval = FALSE}
 rmarkdown::render("README.Rmd",
     output_format = "github_document",
-    output_dir = "../README.md",
+    output_dir = "../",
     output_options = list(
         html_preview = FALSE,
         toc = TRUE, 
@@ -19,7 +19,7 @@ rmarkdown::render("README.Rmd",
 
 Here we are going to show how to retrieve data from the [PokeAPI](https://pokeapi.co/) from six endpoints using functions that I have created. First we're going to walk through the functions and then we will do a bit of data exploration.
 
-As a general note, while it is possible to query these endpoints using numbers, I do not recommend it. For example, in the Ability endpoint, there are 327 abilities, but you can only query up to ability 267 using the index number. After that, you must use the ability name to get data about that ability. To help with this issue, I have provided **a couple lines of code** before each function that will result in a list of all available index names that you can query by or you can use the resulting list to query the entire endpoint as I have done in the data exploration.
+As a general note, while it is possible to query these endpoints using numbers, I do not recommend it. For example, in the Ability endpoint, there are 327 abilities, but you can only query up to ability 267 using the index number. After that, you must use the ability name to get data about that ability. To help with this issue, I have provided a couple lines of code before each function that will result in a list of all available index names that you can query by or you can use the resulting list to query the entire endpoint as I have done in the data exploration.
 
 
 # Required R Packages
@@ -35,8 +35,6 @@ library(data.table)
 # Data Manipulation
 library(tidyverse)
 library(dplyr)
-
-knitr::opts_chunk$set(fig.path = "../images/")
 ```
 
 The following packages were used to query the API:
@@ -54,10 +52,6 @@ The following packages were used for the data exploration:
 ## Ability
 
 The `ability` function interacts with the `ability` endpoint of the PokeAPI. The function returns a tibble with an observation for each pokemon that has the ability and what generation the ability was introduced in.
-
-###
-#
-###
 
 ```{r}
 # Finding a list of all available abilities
@@ -418,7 +412,7 @@ Here we can see what types of Pokemon are most and least prevalent. Something to
 
 
 ### Exploring Generations
-##### Is there a power creep between generations of pokemon?
+#### Is there a power creep between generations of pokemon?
 ```{r}
 Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
   geom_bar(aes(fill = Generation)) +

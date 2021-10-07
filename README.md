@@ -4,9 +4,6 @@ Samantha Hunter
 -   [Required R Packages](#required-r-packages)
 -   [Functions to Query PokeAPI](#functions-to-query-pokeapi)
     -   [Ability](#ability)
-        -   [](#section)
--   [](#section-1)
-    -   [](#section-2)
     -   [Pokemon Type](#pokemon-type)
     -   [Generation](#generation)
     -   [Habitat](#habitat)
@@ -29,8 +26,8 @@ As a general note, while it is possible to query these endpoints using
 numbers, I do not recommend it. For example, in the Ability endpoint,
 there are 327 abilities, but you can only query up to ability 267 using
 the index number. After that, you must use the ability name to get data
-about that ability. To help with this issue, I have provided **a couple
-lines of code** before each function that will result in a list of all
+about that ability. To help with this issue, I have provided a couple
+lines of code before each function that will result in a list of all
 available index names that you can query by or you can use the resulting
 list to query the entire endpoint as I have done in the data
 exploration.
@@ -53,12 +50,6 @@ The `ability` function interacts with the `ability` endpoint of the
 PokeAPI. The function returns a tibble with an observation for each
 pokemon that has the ability and what generation the ability was
 introduced in.
-
-### 
-
-# 
-
-### 
 
 ``` r
 # Finding a list of all available abilities
@@ -352,13 +343,7 @@ Pokemon_Habitat <- habitat(avail_habitat)
 Pokemon_Stats <- poke_stats(avail_pokemon)
 Pokemon_Ability <- ability(avail_ability)
 Pokemon_Generation <- generation(avail_gen)
-```
 
-    ## Warning: `as.tibble()` was deprecated in tibble 2.0.0.
-    ## Please use `as_tibble()` instead.
-    ## The signature and semantics have changed, see `?as_tibble`.
-
-``` r
 # Only querying the first 898 unique pokemon
 Pokemon_Stats <- Pokemon_Stats[1:898, ]
 
@@ -458,7 +443,7 @@ Pokemon_Type_Plot <- ggplot(data = Pokemon_Types, aes(x = Type)) +
 Pokemon_Type_Plot
 ```
 
-![](../images/unnamed-chunk-14-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 addmargins(table(Pokemon_Type_Stats$Type1, Pokemon_Type_Stats$Type2))
@@ -517,7 +502,7 @@ being made of water and water being the most prevalent Pokemon type.
 
 ### Exploring Generations
 
-##### Is there a power creep between generations of pokemon?
+#### Is there a power creep between generations of pokemon?
 
 ``` r
 Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
@@ -528,7 +513,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
 Pokemon_Gen_Plot
 ```
 
-![](../images/unnamed-chunk-15-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 So we can see that the Generations with the most Pokemon cohorts is
 Generation I and Generation V, both which have about 150 Pokemon added
@@ -549,7 +534,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Type_Stats, aes(x = TypeCat)) +
 Pokemon_Gen_Plot
 ```
 
-![](../images/unnamed-chunk-16-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 table(Pokemon_Type_Stats$Generation, Pokemon_Type_Stats$TypeCat)
@@ -626,7 +611,7 @@ Stat_Boxplot <- ggplot(data = Pokemon_Stats) +
 Stat_Boxplot
 ```
 
-![](../images/unnamed-chunk-18-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 This box plot graphically mostly shows what the previous table
 represented numerically, but here we have the median instead of the
@@ -650,7 +635,7 @@ Stat_Hist
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](../images/unnamed-chunk-19-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 Looking at these histograms, we can most clearly see that there is
 little pattern between total base stats and the Generation of Pokemon. I
@@ -689,7 +674,7 @@ HP_Defense <- ggplot(data = Pokemon_Stats, aes(x = hp, y = defense)) +
 HP_Defense
 ```
 
-![](../images/unnamed-chunk-20-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 ``` r
 HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
@@ -697,7 +682,7 @@ HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
 HP_Attack
 ```
 
-![](../images/unnamed-chunk-20-2.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
 
 ``` r
 Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
@@ -705,7 +690,7 @@ Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
 Defense_Attack
 ```
 
-![](../images/unnamed-chunk-20-3.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-18-3.png)<!-- -->
 
 All three of these scatterplots show a vague positive correlations
 between the HP, attack, and defense stats, which I find surprisingly. At
