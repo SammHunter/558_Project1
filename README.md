@@ -34,13 +34,14 @@ exploration.
 
 # Required R Packages
 
-The following packages were used to query the API: `httr`: used to
-connect to the API via URL `jsonlite`: used to decode the information we
-got from the API into plain text `purr`: used to unlist the output from
-the API `data.table`: used to combine the lists into a single dataframe
+\*The following packages were used to query the API:  
++`httr`: used to connect to the API via URL +`jsonlite`: used to decode
+the information we got from the API into plain text +`purr`: used to
+unlist the output from the API +`data.table`: used to combine the lists
+into a single dataframe
 
-The following packages were used for the data exploration: `tidyverse`:
-used for data manipulation and visualization
+\*The following packages were used for the data exploration:  
++`tidyverse`: used for data manipulation and visualization
 
 # Functions to Query PokeAPI
 
@@ -443,54 +444,54 @@ Pokemon_Type_Plot <- ggplot(data = Pokemon_Types, aes(x = Type)) +
 Pokemon_Type_Plot
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 ``` r
 addmargins(table(Pokemon_Type_Stats$Type1, Pokemon_Type_Stats$Type2))
 ```
 
     ##           
-    ##            bug dark dragon electric fairy fighting fire flying ghost grass ground ice normal
-    ##   bug       19    0      0        4     2        0    4      0     1     5      0   2      0
-    ##   dark       0   11      0        0     3        0    0      0     0     0      0   0      0
-    ##   dragon     0    4     13        0     0        0    0      0     0     0      0   0      0
-    ##   electric   0    1      2       32     2        0    0      0     0     0      0   1      0
-    ##   fairy      0    0      0        0    18        0    0      0     0     0      0   0      0
-    ##   fighting   3    3      2        0     0       27    6      1     1     3      0   1      0
-    ##   fire       0    3      2        0     0        0   32      0     0     0      0   0      0
-    ##   flying    13    5      6        2     2        0    5      2     2     6      2   2      0
-    ##   ghost      0    2      3        1     0        0    4      0    13     4      0   1      0
-    ##   grass      0    4      3        0     5        0    0      0     0    42      0   2      0
-    ##   ground     1    3      6        1     0        0    2      0     5     1     17   3      0
-    ##   ice        0    2      1        0     0        0    0      0     0     0      0  13      0
-    ##   normal     0    1      1        2     4        2    2     26     0     2      1   0     69
-    ##   poison    12    3      3        1     0        0    2      0     3    14      2   0      0
-    ##   psychic    0    2      2        0     7        0    0      0     0     0      0   3      0
-    ##   rock       5    1      2        0     2        0    3      0     0     2      0   2      0
-    ##   steel      0    2      2        4     3        0    1      0     0     3      0   0      0
-    ##   water      0    4      3        2     4        0    0      0     0     3      0   7      0
-    ##   Sum       53   51     51       49    52       29   61     29    25    85     22  37     69
+    ##            bug dark dragon electric fairy fighting fire flying ghost grass ground ice normal poison psychic rock steel water
+    ##   bug       19    0      0        4     2        0    4      0     1     5      0   2      0      0       2    0     5     5
+    ##   dark       0   11      0        0     3        0    0      0     0     0      0   0      0      0       0    0     0     0
+    ##   dragon     0    4     13        0     0        0    0      0     0     0      0   0      0      0       0    0     0     0
+    ##   electric   0    1      2       32     2        0    0      0     0     0      0   1      0      0       0    0     0     0
+    ##   fairy      0    0      0        0    18        0    0      0     0     0      0   0      0      0       0    0     0     0
+    ##   fighting   3    3      2        0     0       27    6      1     1     3      0   1      0      2       3    1     2     1
+    ##   fire       0    3      2        0     0        0   32      0     0     0      0   0      0      0       2    0     0     1
+    ##   flying    13    5      6        2     2        0    5      2     2     6      2   2      0      3       6    3     3     8
+    ##   ghost      0    2      3        1     0        0    4      0    13     4      0   1      0      0       2    0     2     2
+    ##   grass      0    4      3        0     5        0    0      0     0    42      0   2      0      0       4    0     0     0
+    ##   ground     1    3      6        1     0        0    2      0     5     1     17   3      0      0       2    9     2     9
+    ##   ice        0    2      1        0     0        0    0      0     0     0      0  13      0      0       0    0     0     0
+    ##   normal     0    1      1        2     4        2    2     26     0     2      1   0     69      0       2    0     0     1
+    ##   poison    12    3      3        1     0        0    2      0     3    14      2   0      0     16       0    1     0     6
+    ##   psychic    0    2      2        0     7        0    0      0     0     0      0   3      0      0      35    0     0     0
+    ##   rock       5    1      2        0     2        0    3      0     0     2      0   2      0      0       2   12     7    11
+    ##   steel      0    2      2        4     3        0    1      0     0     3      0   0      0      0       7    0     9     1
+    ##   water      0    4      3        2     4        0    0      0     0     3      0   7      0      0       5    0     0    65
+    ##   Sum       53   51     51       49    52       29   61     29    25    85     22  37     69     21      72   26    30   110
     ##           
-    ##            poison psychic rock steel water Sum
-    ##   bug           0       2    0     5     5  49
-    ##   dark          0       0    0     0     0  14
-    ##   dragon        0       0    0     0     0  17
-    ##   electric      0       0    0     0     0  38
-    ##   fairy         0       0    0     0     0  18
-    ##   fighting      2       3    1     2     1  56
-    ##   fire          0       2    0     0     1  40
-    ##   flying        3       6    3     3     8  70
-    ##   ghost         0       2    0     2     2  34
-    ##   grass         0       4    0     0     0  60
-    ##   ground        0       2    9     2     9  61
-    ##   ice           0       0    0     0     0  16
-    ##   normal        0       2    0     0     1 113
-    ##   poison       16       0    1     0     6  63
-    ##   psychic       0      35    0     0     0  49
-    ##   rock          0       2   12     7    11  49
-    ##   steel         0       7    0     9     1  32
-    ##   water         0       5    0     0    65  93
-    ##   Sum          21      72   26    30   110 872
+    ##            Sum
+    ##   bug       49
+    ##   dark      14
+    ##   dragon    17
+    ##   electric  38
+    ##   fairy     18
+    ##   fighting  56
+    ##   fire      40
+    ##   flying    70
+    ##   ghost     34
+    ##   grass     60
+    ##   ground    61
+    ##   ice       16
+    ##   normal   113
+    ##   poison    63
+    ##   psychic   49
+    ##   rock      49
+    ##   steel     32
+    ##   water     93
+    ##   Sum      872
 
 Here we can see what types of Pokemon are most and least prevalent.
 Something to note is that while most of the Pokemon only take on one
@@ -502,7 +503,7 @@ being made of water and water being the most prevalent Pokemon type.
 
 ### Exploring Generations
 
-#### Is there a power creep between generations of pokemon?
+##### Is there a power creep between generations of pokemon?
 
 ``` r
 Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
@@ -513,7 +514,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
 Pokemon_Gen_Plot
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 So we can see that the Generations with the most Pokemon cohorts is
 Generation I and Generation V, both which have about 150 Pokemon added
@@ -534,7 +535,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Type_Stats, aes(x = TypeCat)) +
 Pokemon_Gen_Plot
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 ``` r
 table(Pokemon_Type_Stats$Generation, Pokemon_Type_Stats$TypeCat)
@@ -607,11 +608,13 @@ continued making games.
 Stat_Boxplot <- ggplot(data = Pokemon_Stats) +
   geom_boxplot(mapping = aes(x = total_stats, y = Generation, color = Generation)) +
   coord_flip() +
+  labs(title = "Pokemon Base Stat Box Plots", x = "First Gen Appearance",
+       y = "Pokemon Species Counts") +
   theme(axis.text.x=element_text(angle=45))
 Stat_Boxplot
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
 
 This box plot graphically mostly shows what the previous table
 represented numerically, but here we have the median instead of the
@@ -629,13 +632,15 @@ were proportional.
 ``` r
 Stat_Hist <- ggplot(data = Pokemon_Stats)+
   geom_histogram(mapping = aes(x = total_stats)) +
+  labs(title = "Histogram of Base Stat", x = "Total Stat Value",
+       y = "Count of Pokemon") +
   facet_wrap(vars(Generation))
 Stat_Hist
 ```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
 
 Looking at these histograms, we can most clearly see that there is
 little pattern between total base stats and the Generation of Pokemon. I
@@ -670,27 +675,30 @@ in battle, as well as has some effect on Pokemon in-game contests.
 
 ``` r
 HP_Defense <- ggplot(data = Pokemon_Stats, aes(x = hp, y = defense)) +
-  geom_point(aes(color = Generation))
+  geom_point(aes(color = Generation)) +
+  labs(title = "Base HP vs Base Defense Stats", x = "HP", y = "Defense")
 HP_Defense
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 ``` r
 HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
-  geom_point(aes(color = Generation))
+  geom_point(aes(color = Generation)) +
+  labs(title = "Base HP vs Base Attack Stats", x = "HP", y = "Defense")
 HP_Attack
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-18-2.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-29-2.png)<!-- -->
 
 ``` r
 Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
-  geom_point(aes(color = Generation))
+  geom_point(aes(color = Generation)) +
+  labs(title = "Base Defense vs Base Attack Stats", x = "HP", y = "Defense")
 Defense_Attack
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-18-3.png)<!-- -->
+![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-29-3.png)<!-- -->
 
 All three of these scatterplots show a vague positive correlations
 between the HP, attack, and defense stats, which I find surprisingly. At

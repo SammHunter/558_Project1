@@ -8,11 +8,13 @@ output: html_document
 ```{r echo=FALSE, message = FALSE, eval = FALSE}
 rmarkdown::render("README.Rmd",
     output_format = "github_document",
-    output_dir = "../",
+    output_dir = "..",
     output_options = list(
         html_preview = FALSE,
         toc = TRUE, 
-        toc_depth = 6)
+        toc_depth = 6, 
+        toc_float = YES, 
+        code_folding = SHOW)
   )
 ```
 
@@ -37,17 +39,17 @@ library(tidyverse)
 library(dplyr)
 ```
 
-The following packages were used to query the API:
-  `httr`: used to connect to the API via URL
-  `jsonlite`: used to decode the information we got from the API into plain text
-  `purr`: used to unlist the output from the API
-  `data.table`: used to combine the lists into a single dataframe
+*The following packages were used to query the API:  
+    +`httr`: used to connect to the API via URL
+    +`jsonlite`: used to decode the information we got from the API into plain text
+    +`purr`: used to unlist the output from the API
+    +`data.table`: used to combine the lists into a single dataframe
 
-The following packages were used for the data exploration:
-  `tidyverse`: used for data manipulation and visualization
+*The following packages were used for the data exploration:  
+    +`tidyverse`: used for data manipulation and visualization
 
 
-# Functions to Query PokeAPI
+# Functions to Query PokeAPI  
 
 ## Ability
 
@@ -412,7 +414,7 @@ Here we can see what types of Pokemon are most and least prevalent. Something to
 
 
 ### Exploring Generations
-#### Is there a power creep between generations of pokemon?
+##### Is there a power creep between generations of pokemon?
 ```{r}
 Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
   geom_bar(aes(fill = Generation)) +
@@ -470,6 +472,8 @@ Here we have the spread of the data of the total_stats for each generation of ga
 Stat_Boxplot <- ggplot(data = Pokemon_Stats) +
   geom_boxplot(mapping = aes(x = total_stats, y = Generation, color = Generation)) +
   coord_flip() +
+  labs(title = "Pokemon Base Stat Box Plots", x = "First Gen Appearance",
+       y = "Pokemon Species Counts") +
   theme(axis.text.x=element_text(angle=45))
 Stat_Boxplot
 ```
@@ -482,6 +486,8 @@ This box plot graphically mostly shows what the previous table represented numer
 ```{r}
 Stat_Hist <- ggplot(data = Pokemon_Stats)+
   geom_histogram(mapping = aes(x = total_stats)) +
+  labs(title = "Histogram of Base Stat", x = "Total Stat Value",
+       y = "Count of Pokemon") +
   facet_wrap(vars(Generation))
 Stat_Hist
 ```
@@ -495,15 +501,18 @@ I don't think we can definitively say that the base stats overall increased with
 
 ```{r}
 HP_Defense <- ggplot(data = Pokemon_Stats, aes(x = hp, y = defense)) +
-  geom_point(aes(color = Generation))
+  geom_point(aes(color = Generation)) +
+  labs(title = "Base HP vs Base Defense Stats", x = "HP", y = "Defense")
 HP_Defense
 
 HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
-  geom_point(aes(color = Generation))
+  geom_point(aes(color = Generation)) +
+  labs(title = "Base HP vs Base Attack Stats", x = "HP", y = "Defense")
 HP_Attack
 
 Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
-  geom_point(aes(color = Generation))
+  geom_point(aes(color = Generation)) +
+  labs(title = "Base Defense vs Base Attack Stats", x = "HP", y = "Defense")
 Defense_Attack
 ```
 
