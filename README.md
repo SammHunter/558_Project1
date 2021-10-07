@@ -50,14 +50,16 @@ library(tidyverse)
 library(dplyr)
 ```
 
-\*The following packages were used to query the API:  
-+`httr`: used to connect to the API via URL +`jsonlite`: used to decode
+\*The following packages were used to query the API:
+
+\+`httr`: used to connect to the API via URL +`jsonlite`: used to decode
 the information we got from the API into plain text +`purr`: used to
 unlist the output from the API +`data.table`: used to combine the lists
 into a single dataframe
 
-\*The following packages were used for the data exploration:  
-+`tidyverse`: used for data manipulation and visualization
+\*The following packages were used for the data exploration:
+
+\+`tidyverse`: used for data manipulation and visualization
 
 # Functions to Query PokeAPI
 
@@ -81,6 +83,7 @@ ability <- function(name, ...){
   # data about the Pokemon that can use this ability, what generation
   # of game the ability originated in
   ###
+  avail_ability <- lapply(c(name, ...), tolower)
 
   url_ability <- paste0("https://pokeapi.co/api/v2/ability/", avail_ability)
   poke_bility <- lapply(url_ability, GET)
@@ -133,7 +136,10 @@ type <- function(name, ...){
   # This function takes the Pokemon types and returns all the Pokemon
   # of that type.
   ###
-  url_type <- paste0("https://pokeapi.co/api/v2/type/", (c(name, ...)))
+  
+  avail_types <- lapply(c(name, ...), tolower)
+  
+  url_type <- paste0("https://pokeapi.co/api/v2/type/", avail_types)
   poke_type <- lapply(url_type, GET)
   poke_type <-lapply(poke_type, '[[', 'content')
   poke_type <- lapply(poke_type, rawToChar)
@@ -176,7 +182,10 @@ generation <- function(name, ...){
   # This function takes the name of the generations supplied and returns
   # the Pokemon that was first introduced in that generation.
   ###
-  url_gen <- paste0("https://pokeapi.co/api/v2/generation/", c(name, ...))
+  
+  avail_gen <- lapply(c(name, ...), tolower)
+  
+  url_gen <- paste0("https://pokeapi.co/api/v2/generation/", avail_gen)
   poke_gen <- lapply(url_gen, GET)
   poke_gen <- lapply(poke_gen, '[[', 'content')
   poke_gen <- lapply(poke_gen, rawToChar)
@@ -217,7 +226,9 @@ habitat <- function(name, ...){
   # This function takes the name of the habitat and returns what Pokemon that
   # can be found in that habitat
   ###
-  url_habitat <- paste0("https://pokeapi.co/api/v2/pokemon-habitat/", c(name, ...))
+  avail_habitat <- lapply(c(name, ...), tolower)
+  
+  url_habitat <- paste0("https://pokeapi.co/api/v2/pokemon-habitat/", avail_habitat)
   poke_habitat <- lapply(url_habitat, GET)
   poke_habitat <-lapply(poke_habitat, '[[', 'content')
   poke_habitat <- lapply(poke_habitat, rawToChar)
@@ -261,7 +272,11 @@ berry <- function(name, ...){
   # This function takes the name of the berry and returns data about
   # the germination period of berries and the number of fruit the bush bears
   ###
-  url_berry <- paste0("https://pokeapi.co/api/v2/berry/", c(name, ...))
+  
+  avail_berry <- lapply(c(name, ...), tolower)
+    
+    
+  url_berry <- paste0("https://pokeapi.co/api/v2/berry/", avail_berry)
   poke_berry <- lapply(url_berry, GET)
   poke_berry <- lapply(poke_berry, '[[', 'content')
   poke_berry <- lapply(poke_berry, rawToChar)
@@ -298,7 +313,10 @@ poke_stats <- function(name, ...){
   # This function takes the Pokemon names and returns all the Pokemon
   # stats for those species.
   ###
-  url <- paste0("https://pokeapi.co/api/v2/pokemon/",c(name, ...))
+  
+  avail_pokemon <- lapply(c(name, ...), tolower)
+  
+  url <- paste0("https://pokeapi.co/api/v2/pokemon/", avail_pokemon)
   pokedex <- lapply(X = url, FUN = GET)
   pokedex<-lapply(pokedex, '[[', 'content')
   pokedex <- lapply(pokedex, rawToChar)
@@ -460,7 +478,7 @@ Pokemon_Type_Plot <- ggplot(data = Pokemon_Types, aes(x = Type)) +
 Pokemon_Type_Plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ``` r
 addmargins(table(Pokemon_Type_Stats$Type1, Pokemon_Type_Stats$Type2))
@@ -530,7 +548,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
 Pokemon_Gen_Plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 So we can see that the Generations with the most Pokemon cohorts is
 Generation I and Generation V, both which have about 150 Pokemon added
@@ -551,7 +569,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Type_Stats, aes(x = TypeCat)) +
 Pokemon_Gen_Plot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 table(Pokemon_Type_Stats$Generation, Pokemon_Type_Stats$TypeCat)
@@ -642,7 +660,7 @@ Stat_Boxplot <- ggplot(data = Pokemon_Stats) +
 Stat_Boxplot
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 This box plot graphically mostly shows what the previous table
 represented numerically, but here we have the median instead of the
@@ -668,7 +686,7 @@ Stat_Hist
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 Looking at these histograms, we can most clearly see that there is
 little pattern between total base stats and the Generation of Pokemon. I
@@ -708,7 +726,7 @@ HP_Defense <- ggplot(data = Pokemon_Stats, aes(x = hp, y = defense)) +
 HP_Defense
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 ``` r
 HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
@@ -717,7 +735,7 @@ HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
 HP_Attack
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-2.png)<!-- -->
 
 ``` r
 Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
@@ -726,7 +744,7 @@ Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
 Defense_Attack
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-3.png)<!-- -->
 
 All three of these scatterplots show a vague positive correlations
 between the HP, attack, and defense stats, which I find surprisingly. At
@@ -735,10 +753,12 @@ attack and defense, but that plot shows a stronger correlation than that
 of defense and HP. The strongest positive linear relationship is between
 attack and HP. There also is a clear trumpeting pattern in each of these
 plots, with the most severe occurring between attack and defense. I
-definitely don’t think any of the plots show a significant difference
-between the generations and the pattern of the scatterplots. This could
-be due to the number of points that we have plotted on each graph, 898.
-The number of points may obscure any patterns that may be visible
-between the scatterplots. Unfortunately, ggplot2’s shape attribute only
-will count up to six unique values, so I could not make each generation
-a separate shape.
+might argue that those ultra-high defense stats are inversely related to
+those Pokemon with ultra-high HP, but most of the points fall in the
+mid-HP has a mid-Defense stat. I definitely don’t think any of the plots
+show a significant difference between the generations and the pattern of
+the scatterplots. This could be due to the number of points that we have
+plotted on each graph, 898. The number of points may obscure any
+patterns that may be visible between the scatterplots. Unfortunately,
+ggplot2’s shape attribute only will count up to six unique values, so I
+could not make each generation a separate shape.
