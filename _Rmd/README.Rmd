@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r echo=FALSE, message = FALSE, eval = FALSE}
-rmarkdown::render("../PokeAPI_Vignette.md",
+rmarkdown::render("../README.md",
     output_format = "github_document",
     output_dir = "_posts/",
     output_options = list(
@@ -324,7 +324,7 @@ poke_stats <- function(name, ...){
 
 ## Generating Data Sets
 
-I only want to analyze the first [898 Pokemon] (https://www.wargamer.com/pokemon-trading-card-game/how-many-pokemon-are-there). The PokeAPI is structured so that the first 898 Pokemon are the strictly unique species, while the rest are types of the species that may have a different regional form or are evolved in a special way that grants them special base stats. I only wanted to analyze the base stats from 'normal' wild Pokemon. Because I want to see if there is a [power creep](https://tvtropes.org/pmwiki/pmwiki.php/Main/PowerCreep) as the Pokemon world was built, and not as the player can manipulate their caught Pokemon. I will also do some general exploration of the Pokemon attributes. 
+I only want to analyze the [first 898 Pokemon](https://www.wargamer.com/pokemon-trading-card-game/how-many-pokemon-are-there). The PokeAPI is structured so that the first 898 Pokemon are the strictly unique species, while the rest are types of the species that may have a different regional form or are evolved in a special way that grants them special base stats. I only wanted to analyze the base stats from 'normal' wild Pokemon. Because I want to see if there is a [power creep](https://tvtropes.org/pmwiki/pmwiki.php/Main/PowerCreep) as the Pokemon world was built, and not as the player can manipulate their caught Pokemon. I will also do some general exploration of the Pokemon attributes. 
 
 
 ```{r}
@@ -397,7 +397,7 @@ table(Habitat_Gen$Habitat, Habitat_Gen$Generation)
 ```
 
 
-I thought it was surprising that habitats were only provided up to Generation III of the games. According to Bulbagarden(https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_habitat) and Bulbapedia(https://bulbapedia.bulbagarden.net/wiki/Talk:List_of_Pok%C3%A9mon_by_habitat), the habitat classifications are only a feature in FireRed and LeafGreen, which are reboots of the 1996 Red and Green games. This explains why there are no observations included in our contingency table after Generation III.
+I thought it was surprising that habitats were only provided up to Generation III of the games. According to [Bulbagarden](https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_habitat) and [Bulbapedia](https://bulbapedia.bulbagarden.net/wiki/Talk:List_of_Pok%C3%A9mon_by_habitat), the habitat classifications are only a feature in FireRed and LeafGreen, which are reboots of the 1996 Red and Green games. This explains why there are no observations included in our contingency table after Generation III. The Pokemon video games are generally compatible with previous generations of Pokemon so Generation III games include both Generation I and Generation II. 
 
 
 ```{r}
@@ -411,13 +411,16 @@ Pokemon_Type_Plot
 addmargins(table(Pokemon_Type_Stats$Type1, Pokemon_Type_Stats$Type2))
 ```
 
+Here we can see what types of Pokemon are most and least prevalent. Something to note is that while most of the Pokemon only take on one Pokemon type (eg Water-Water or Electric-Electric types), there are some types that clearly are very compatible, like Flying and Bug type pokemon or Steel and Psychic type Pokemon. There are some unexpected results, like Ice-Water combination Pokemon do not seem to be a thing despite ice being made of water and water being the most prevalent Pokemon type. 
+
+
 ### Exploring Generations
 ##### Is there a power creep between generations of pokemon?
 ```{r}
 Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
   geom_bar(aes(fill = Generation)) +
   labs(title = "Number of Pokemon Per Generation", x = "First Gen Appearance",
-       y = "Pokemon Counts") +
+       y = "Pokemon Counts of Unique Species") +
   theme(axis.text.x=element_text(angle=45))
 Pokemon_Gen_Plot
 ```
@@ -427,8 +430,8 @@ So we can see that the Generations with the most Pokemon cohorts is Generation I
 ```{r}
 Pokemon_Gen_Plot <- ggplot(data = Pokemon_Type_Stats, aes(x = TypeCat)) +
   geom_bar(aes(fill = TypeCat)) +
-  labs(title = "Number of Pokemon Per Generation", x = "First Gen Appearance",
-       y = "Pokemon Counts") +
+  labs(title = "Pokemon Base Stat Categories", x = "First Gen Appearance",
+       y = "Pokemon Species Counts", fill = "Cumulative Base Stats") +
   facet_wrap(vars(Generation)) +
   theme(axis.text.x=element_text(angle=45))
 Pokemon_Gen_Plot
@@ -436,7 +439,7 @@ Pokemon_Gen_Plot
 table(Pokemon_Type_Stats$Generation, Pokemon_Type_Stats$TypeCat)
 ```
 
-While there clearly isn't the same proportion of poor, fair, good, and great Pokemon added to each generations, it does not seem that there is any pattern between the Pokemon's total base stats and in what generation they were added. Generation I, II, Generation III do seem to lack great Pokemon, but so does Generation V. Generation IV has the most "great" Pokemon. Because these a categorical variables as well, there is no quantify how much better Generation IV Pokemon are than say Generation II. In otherwords, Generation IV could have most of their great Pokemon, just barely in the upper quantile of the total_stats group. 
+While there clearly isn't the same proportion of poor, fair, good, and great Pokemon added to each generations, it does not seem that there is any pattern between the Pokemon's total base stats and in what generation they were added. Generation I, II, Generation III do seem to lack great Pokemon, but so does Generation V. The later generations have more "great" Pokemon than other categories of Pokemon with "poor", "fair", and "good" base stats, but they don't actually seem to have more "great" Pokemon than the other generations. All of the Generations have somewhere between 18 and 37 "great" Pokemon. Because these a categorical variables as well, there is no quantify how much better Generation IV Pokemon are than say Generation II. In other words, Generation IV could have most of their great Pokemon, just barely in the upper quantile of the total_stats group. 
 
 
 ```{r}
@@ -452,6 +455,8 @@ quant3 <- function(col){
   return(quant[4])
 }
 
+# Creating the 5 basic summary stats - min, quantile 1, mean, 
+# quantile 3, and max - for the Pokemon Types 
 Summary_total_stats <- Pokemon_Type_Stats %>% group_by(Generation) %>%
   summarise(min_total_stats = min(total_stats),
             q1_total_stats = round(quant1(total_stats)),
@@ -473,6 +478,9 @@ Stat_Boxplot
 ```
 
 
+This box plot graphically mostly shows what the previous table represented numerically, but here we have the median instead of the mean. I do think it is again clear that Generation IV may have the "best" group of Pokemon based on total stats. Generations IV's median is equal to most of the other generations third quartiles. Generation VII and Generation VIII also have a slightly higher median than the other generations, but they do not exceed the third quartiles of the other generations. I think it is worth pointing out that Generation I, II, III, V, and VI all have nearly the same median. Generation V also have a very short lower quantile tail indicating that it's probably has fewer "poor" Pokemon than it would have if the distributions of total stats were proportional.  
+
+
 
 ```{r}
 Stat_Hist <- ggplot(data = Pokemon_Stats)+
@@ -482,26 +490,25 @@ Stat_Hist
 ```
 
 
-Because we didn't find any evidence that the total base stats between Pokemon of different generations were different, I thought I may look to see if there was a relationship between the three main base stats - HP, attack, and defense. I think it would make sense that attack and defense may be inversely related since they're opposites of each other in a video game. 
+Looking at these histograms, we can most clearly see that there is little pattern between total base stats and the Generation of Pokemon. I do think it's interesting that the total stats for each generation does seem to be bimodal or multimodal instead of a normal or uniform distribution. In each game there does seem to be a cohort of a few particularly strong Pokemon that are probably the legendary Pokemon of each generation. There also seems to be a cohort of weak Pokemon of each generation. In later generations, these would probably be considered the 'baby' evolutions of Pokemon that you can hatch from eggs. 
+
+
+I don't think we can definitively say that the base stats overall increased with each generation, but if I did have to choose a "great" or strong Pokemon, I would pick from Generation IV. It seems to have the highest instance of "great" Pokemon compared to the rest of the generations. We didn't find any definitive evidence that the total base stats between Pokemon of different generations were different, but I thought I may look to see if there was a relationship between the three main base stats - HP, attack, and defense. I think it would make sense that attack and defense may be inversely related since they're opposites of each other in a video game. The special attack and special defense is based on the Pokemon type so like a fire-type Pokemon with a high special attack value may be able to more easily kill an ice-type Pokemon than another fire-type Pokemon with low special attack. Special defense works much in the same way, but decides how strong the Pokemon is against the Pokemon types that they receive partial damage from. I've excluded those stats because they so heavily rely on Pokemon types that there isn't an easy way to quantify their value - it would take much more than just a simple numeric scatterplot to explore that. I also excluded the Speed stat which decides which Pokemon has the first move in battle, as well as has some effect on Pokemon in-game contests. 
+
 
 ```{r}
 HP_Defense <- ggplot(data = Pokemon_Stats, aes(x = hp, y = defense)) +
   geom_point(aes(color = Generation))
 HP_Defense
-```
 
-
-```{r}
 HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
   geom_point(aes(color = Generation))
 HP_Attack
-```
 
-
-```{r}
 Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
   geom_point(aes(color = Generation))
 Defense_Attack
 ```
 
 
+All three of these scatterplots show a vague positive correlations between the HP, attack, and defense stats, which I find surprisingly. At the very least, I thought there would be an inverse relationship between attack and defense, but that plot shows a stronger correlation than that of defense and HP. The strongest positive linear relationship is between attack and HP. There also is a clear trumpeting pattern in each of these plots, with the most severe occurring between attack and defense. I definitely don't think any of the plots show a significant difference between the generations and the pattern of the scatterplots. This could be due to the number of points that we have plotted on each graph, 898. The number of points may obscure any patterns that may be visible between the scatterplots. Unfortunately, ggplot2's shape attribute only will count up to six unique values, so I could not make each generation a separate shape. 
