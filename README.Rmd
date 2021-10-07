@@ -4,22 +4,6 @@ author: "Samantha Hunter"
 date: "10/05/2021"
 ---
 
-```{r echo=FALSE, message = FALSE, eval = FALSE}
-rmarkdown::render("README.Rmd",
-    output_format = "github_document",
-    output_dir = "..",
-    output_options = list(
-        html_preview = FALSE,
-        toc = TRUE, 
-        toc_depth = 6, 
-        toc_float = TRUE, 
-        code_folding = TRUE)
-  )
-```
-```{r echo = FALSE}
-knitr::opts_chunk$set(fig.path = "/")
-```
-
 
 Here we are going to show how to retrieve data from the [PokeAPI](https://pokeapi.co/) from six endpoints using functions that I have created. First we're going to walk through the functions and then we will do a bit of data exploration.
 
@@ -41,14 +25,14 @@ library(tidyverse)
 library(dplyr)
 ```
 
-*The following packages were used to query the API:
-    *`httr`: used to connect to the API via URL
-    *`jsonlite`: used to decode the information we got from the API into plain text
-    *`purr`: used to unlist the output from the API
-    *`data.table`: used to combine the lists into a single dataframe
+*The following packages were used to query the API:  
+    +`httr`: used to connect to the API via URL
+    +`jsonlite`: used to decode the information we got from the API into plain text
+    +`purr`: used to unlist the output from the API
+    +`data.table`: used to combine the lists into a single dataframe
 
-*The following packages were used for the data exploration:
-    *`tidyverse`: used for data manipulation and visualization
+*The following packages were used for the data exploration:  
+    +`tidyverse`: used for data manipulation and visualization
 
 
 # Functions to Query PokeAPI  
@@ -423,7 +407,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
   labs(title = "Number of Pokemon Per Generation", x = "First Gen Appearance",
        y = "Pokemon Counts of Unique Species") +
   theme(axis.text.x=element_text(angle=45))
-print(Pokemon_Gen_Plot)
+Pokemon_Gen_Plot
 ```
 
 So we can see that the Generations with the most Pokemon cohorts is Generation I and Generation V, both which have about 150 Pokemon added for each game. Generation VI is the smallest group of new Pokemon, only adding about 75 more. We should expect that there should be proportional representation of generally strong and generally weak Pokemon in each group. That means we should expect about twice as many strong and weak Pokemon in Generations I and V than in Generation VI, and all the other Generations should fall somewhere between them. 
@@ -477,7 +461,7 @@ Stat_Boxplot <- ggplot(data = Pokemon_Stats) +
   labs(title = "Pokemon Base Stat Box Plots", x = "First Gen Appearance",
        y = "Pokemon Species Counts") +
   theme(axis.text.x=element_text(angle=45))
-print(Stat_Boxplot)
+Stat_Boxplot
 ```
 
 
@@ -491,7 +475,7 @@ Stat_Hist <- ggplot(data = Pokemon_Stats)+
   labs(title = "Histogram of Base Stat", x = "Total Stat Value",
        y = "Count of Pokemon") +
   facet_wrap(vars(Generation))
-print(Stat_Hist)
+Stat_Hist
 ```
 
 
@@ -505,17 +489,17 @@ I don't think we can definitively say that the base stats overall increased with
 HP_Defense <- ggplot(data = Pokemon_Stats, aes(x = hp, y = defense)) +
   geom_point(aes(color = Generation)) +
   labs(title = "Base HP vs Base Defense Stats", x = "HP", y = "Defense")
-print(HP_Defense)
+HP_Defense
 
 HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
   geom_point(aes(color = Generation)) +
   labs(title = "Base HP vs Base Attack Stats", x = "HP", y = "Defense")
-print(HP_Attack)
+HP_Attack
 
 Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
   geom_point(aes(color = Generation)) +
   labs(title = "Base Defense vs Base Attack Stats", x = "HP", y = "Defense")
-print(Defense_Attack)
+Defense_Attack
 ```
 
 

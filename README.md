@@ -460,54 +460,54 @@ Pokemon_Type_Plot <- ggplot(data = Pokemon_Types, aes(x = Type)) +
 Pokemon_Type_Plot
 ```
 
-![](../images/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 addmargins(table(Pokemon_Type_Stats$Type1, Pokemon_Type_Stats$Type2))
 ```
 
     ##           
-    ##            bug dark dragon electric fairy fighting fire flying ghost grass ground ice normal poison psychic rock steel water
-    ##   bug       19    0      0        4     2        0    4      0     1     5      0   2      0      0       2    0     5     5
-    ##   dark       0   11      0        0     3        0    0      0     0     0      0   0      0      0       0    0     0     0
-    ##   dragon     0    4     13        0     0        0    0      0     0     0      0   0      0      0       0    0     0     0
-    ##   electric   0    1      2       32     2        0    0      0     0     0      0   1      0      0       0    0     0     0
-    ##   fairy      0    0      0        0    18        0    0      0     0     0      0   0      0      0       0    0     0     0
-    ##   fighting   3    3      2        0     0       27    6      1     1     3      0   1      0      2       3    1     2     1
-    ##   fire       0    3      2        0     0        0   32      0     0     0      0   0      0      0       2    0     0     1
-    ##   flying    13    5      6        2     2        0    5      2     2     6      2   2      0      3       6    3     3     8
-    ##   ghost      0    2      3        1     0        0    4      0    13     4      0   1      0      0       2    0     2     2
-    ##   grass      0    4      3        0     5        0    0      0     0    42      0   2      0      0       4    0     0     0
-    ##   ground     1    3      6        1     0        0    2      0     5     1     17   3      0      0       2    9     2     9
-    ##   ice        0    2      1        0     0        0    0      0     0     0      0  13      0      0       0    0     0     0
-    ##   normal     0    1      1        2     4        2    2     26     0     2      1   0     69      0       2    0     0     1
-    ##   poison    12    3      3        1     0        0    2      0     3    14      2   0      0     16       0    1     0     6
-    ##   psychic    0    2      2        0     7        0    0      0     0     0      0   3      0      0      35    0     0     0
-    ##   rock       5    1      2        0     2        0    3      0     0     2      0   2      0      0       2   12     7    11
-    ##   steel      0    2      2        4     3        0    1      0     0     3      0   0      0      0       7    0     9     1
-    ##   water      0    4      3        2     4        0    0      0     0     3      0   7      0      0       5    0     0    65
-    ##   Sum       53   51     51       49    52       29   61     29    25    85     22  37     69     21      72   26    30   110
+    ##            bug dark dragon electric fairy fighting fire flying ghost grass ground ice normal poison psychic rock steel
+    ##   bug       19    0      0        4     2        0    4      0     1     5      0   2      0      0       2    0     5
+    ##   dark       0   11      0        0     3        0    0      0     0     0      0   0      0      0       0    0     0
+    ##   dragon     0    4     13        0     0        0    0      0     0     0      0   0      0      0       0    0     0
+    ##   electric   0    1      2       32     2        0    0      0     0     0      0   1      0      0       0    0     0
+    ##   fairy      0    0      0        0    18        0    0      0     0     0      0   0      0      0       0    0     0
+    ##   fighting   3    3      2        0     0       27    6      1     1     3      0   1      0      2       3    1     2
+    ##   fire       0    3      2        0     0        0   32      0     0     0      0   0      0      0       2    0     0
+    ##   flying    13    5      6        2     2        0    5      2     2     6      2   2      0      3       6    3     3
+    ##   ghost      0    2      3        1     0        0    4      0    13     4      0   1      0      0       2    0     2
+    ##   grass      0    4      3        0     5        0    0      0     0    42      0   2      0      0       4    0     0
+    ##   ground     1    3      6        1     0        0    2      0     5     1     17   3      0      0       2    9     2
+    ##   ice        0    2      1        0     0        0    0      0     0     0      0  13      0      0       0    0     0
+    ##   normal     0    1      1        2     4        2    2     26     0     2      1   0     69      0       2    0     0
+    ##   poison    12    3      3        1     0        0    2      0     3    14      2   0      0     16       0    1     0
+    ##   psychic    0    2      2        0     7        0    0      0     0     0      0   3      0      0      35    0     0
+    ##   rock       5    1      2        0     2        0    3      0     0     2      0   2      0      0       2   12     7
+    ##   steel      0    2      2        4     3        0    1      0     0     3      0   0      0      0       7    0     9
+    ##   water      0    4      3        2     4        0    0      0     0     3      0   7      0      0       5    0     0
+    ##   Sum       53   51     51       49    52       29   61     29    25    85     22  37     69     21      72   26    30
     ##           
-    ##            Sum
-    ##   bug       49
-    ##   dark      14
-    ##   dragon    17
-    ##   electric  38
-    ##   fairy     18
-    ##   fighting  56
-    ##   fire      40
-    ##   flying    70
-    ##   ghost     34
-    ##   grass     60
-    ##   ground    61
-    ##   ice       16
-    ##   normal   113
-    ##   poison    63
-    ##   psychic   49
-    ##   rock      49
-    ##   steel     32
-    ##   water     93
-    ##   Sum      872
+    ##            water Sum
+    ##   bug          5  49
+    ##   dark         0  14
+    ##   dragon       0  17
+    ##   electric     0  38
+    ##   fairy        0  18
+    ##   fighting     1  56
+    ##   fire         1  40
+    ##   flying       8  70
+    ##   ghost        2  34
+    ##   grass        0  60
+    ##   ground       9  61
+    ##   ice          0  16
+    ##   normal       1 113
+    ##   poison       6  63
+    ##   psychic      0  49
+    ##   rock        11  49
+    ##   steel        1  32
+    ##   water       65  93
+    ##   Sum        110 872
 
 Here we can see what types of Pokemon are most and least prevalent.
 Something to note is that while most of the Pokemon only take on one
@@ -530,7 +530,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
 Pokemon_Gen_Plot
 ```
 
-![](../images/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 So we can see that the Generations with the most Pokemon cohorts is
 Generation I and Generation V, both which have about 150 Pokemon added
@@ -551,7 +551,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Type_Stats, aes(x = TypeCat)) +
 Pokemon_Gen_Plot
 ```
 
-![](../images/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 table(Pokemon_Type_Stats$Generation, Pokemon_Type_Stats$TypeCat)
@@ -606,6 +606,18 @@ Summary_total_stats <- Pokemon_Type_Stats %>% group_by(Generation) %>%
 Summary_total_stats
 ```
 
+    ## # A tibble: 8 x 6
+    ##   Generation      min_total_stats q1_total_stats avg_total_stats q3_total_stats max_total_stats
+    ##   <chr>                     <dbl>          <dbl>           <dbl>          <dbl>           <dbl>
+    ## 1 generation-i                195            320             408            490             680
+    ## 2 generation-ii               180            320             407            492             680
+    ## 3 generation-iii              190            303             402            475             680
+    ## 4 generation-iv               194            333             442            525             720
+    ## 5 generation-v                255            319             420            495             680
+    ## 6 generation-vi               200            329             428            509             680
+    ## 7 generation-vii              200            339             452            570             680
+    ## 8 generation-viii             180            310             423            506             690
+
 Here we have the spread of the data of the total\_stats for each
 generation of game. I do think that the max of Generation IV is
 surprisingly high at 720, while all the other maximum total\_stats for
@@ -630,7 +642,7 @@ Stat_Boxplot <- ggplot(data = Pokemon_Stats) +
 Stat_Boxplot
 ```
 
-![](../images/unnamed-chunk-19-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 This box plot graphically mostly shows what the previous table
 represented numerically, but here we have the median instead of the
@@ -656,7 +668,7 @@ Stat_Hist
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](../images/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Looking at these histograms, we can most clearly see that there is
 little pattern between total base stats and the Generation of Pokemon. I
@@ -696,7 +708,7 @@ HP_Defense <- ggplot(data = Pokemon_Stats, aes(x = hp, y = defense)) +
 HP_Defense
 ```
 
-![](../images/unnamed-chunk-21-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ``` r
 HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
@@ -705,7 +717,7 @@ HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
 HP_Attack
 ```
 
-![](../images/unnamed-chunk-21-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-2.png)<!-- -->
 
 ``` r
 Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
@@ -714,7 +726,7 @@ Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
 Defense_Attack
 ```
 
-![](../images/unnamed-chunk-21-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-3.png)<!-- -->
 
 All three of these scatterplots show a vague positive correlations
 between the HP, attack, and defense stats, which I find surprisingly. At
