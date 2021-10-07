@@ -2,7 +2,6 @@
 title: "PokeAPI Vignette"
 author: "Samantha Hunter"
 date: "10/05/2021"
-output:
 ---
 
 ```{r echo=FALSE, message = FALSE, eval = FALSE}
@@ -17,6 +16,9 @@ rmarkdown::render("README.Rmd",
         code_folding = TRUE)
   )
 ```
+```{r echo = FALSE}
+knitr::opts_chunk$set(fig.path = "../images/")
+```
 
 
 Here we are going to show how to retrieve data from the [PokeAPI](https://pokeapi.co/) from six endpoints using functions that I have created. First we're going to walk through the functions and then we will do a bit of data exploration.
@@ -25,7 +27,7 @@ As a general note, while it is possible to query these endpoints using numbers, 
 
 
 # Required R Packages
-```{r echo = FALSE, message = FALSE}
+```{r echo = TRUE, message = FALSE}
 # Library for reading data from the API
 library(httr)
 library(jsonlite)
