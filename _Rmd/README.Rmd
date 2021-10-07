@@ -1,8 +1,8 @@
 ---
-title:
+title: "PokeAPI Vignette"
 author: "Samantha Hunter"
 date: "10/05/2021"
-output: html_document
+output:
 ---
 
 ```{r echo=FALSE, message = FALSE, eval = FALSE}
@@ -13,8 +13,8 @@ rmarkdown::render("README.Rmd",
         html_preview = FALSE,
         toc = TRUE, 
         toc_depth = 6, 
-        toc_float = YES, 
-        code_folding = SHOW)
+        toc_float = TRUE, 
+        code_folding = TRUE)
   )
 ```
 

@@ -1,3 +1,5 @@
+PokeAPI Vignette
+================
 Samantha Hunter
 10/05/2021
 
@@ -33,6 +35,20 @@ list to query the entire endpoint as I have done in the data
 exploration.
 
 # Required R Packages
+
+``` r
+# Library for reading data from the API
+library(httr)
+library(jsonlite)
+
+# Unlisting
+library(purrr)
+library(data.table)
+
+# Data Manipulation
+library(tidyverse)
+library(dplyr)
+```
 
 \*The following packages were used to query the API:  
 +`httr`: used to connect to the API via URL +`jsonlite`: used to decode
@@ -444,7 +460,7 @@ Pokemon_Type_Plot <- ggplot(data = Pokemon_Types, aes(x = Type)) +
 Pokemon_Type_Plot
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](../images/unnamed-chunk-15-1.png)<!-- -->
 
 ``` r
 addmargins(table(Pokemon_Type_Stats$Type1, Pokemon_Type_Stats$Type2))
@@ -514,7 +530,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Generation, aes(x = Generation)) +
 Pokemon_Gen_Plot
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](../images/unnamed-chunk-16-1.png)<!-- -->
 
 So we can see that the Generations with the most Pokemon cohorts is
 Generation I and Generation V, both which have about 150 Pokemon added
@@ -535,7 +551,7 @@ Pokemon_Gen_Plot <- ggplot(data = Pokemon_Type_Stats, aes(x = TypeCat)) +
 Pokemon_Gen_Plot
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](../images/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 table(Pokemon_Type_Stats$Generation, Pokemon_Type_Stats$TypeCat)
@@ -614,7 +630,7 @@ Stat_Boxplot <- ggplot(data = Pokemon_Stats) +
 Stat_Boxplot
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](../images/unnamed-chunk-19-1.png)<!-- -->
 
 This box plot graphically mostly shows what the previous table
 represented numerically, but here we have the median instead of the
@@ -640,7 +656,7 @@ Stat_Hist
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](../images/unnamed-chunk-20-1.png)<!-- -->
 
 Looking at these histograms, we can most clearly see that there is
 little pattern between total base stats and the Generation of Pokemon. I
@@ -680,7 +696,7 @@ HP_Defense <- ggplot(data = Pokemon_Stats, aes(x = hp, y = defense)) +
 HP_Defense
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](../images/unnamed-chunk-21-1.png)<!-- -->
 
 ``` r
 HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
@@ -689,7 +705,7 @@ HP_Attack <- ggplot(data = Pokemon_Stats, aes(x = hp, y = attack)) +
 HP_Attack
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-29-2.png)<!-- -->
+![](../images/unnamed-chunk-21-2.png)<!-- -->
 
 ``` r
 Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
@@ -698,7 +714,7 @@ Defense_Attack <- ggplot(data = Pokemon_Stats, aes(x = defense, y = attack)) +
 Defense_Attack
 ```
 
-![](C:/Users/jolop/OneDrive/Desktop/Fall21/ST558/558_Project1/README_files/figure-gfm/unnamed-chunk-29-3.png)<!-- -->
+![](../images/unnamed-chunk-21-3.png)<!-- -->
 
 All three of these scatterplots show a vague positive correlations
 between the HP, attack, and defense stats, which I find surprisingly. At
