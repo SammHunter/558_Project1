@@ -6,9 +6,9 @@ output: html_document
 ---
 
 ```{r echo=FALSE, message = FALSE, eval = FALSE}
-rmarkdown::render("../README.md",
+rmarkdown::render("README.Rmd",
     output_format = "github_document",
-    output_dir = "_posts/",
+    output_dir = "../",
     output_options = list(
         html_preview = FALSE,
         toc = TRUE)
