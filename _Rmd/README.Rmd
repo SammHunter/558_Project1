@@ -8,7 +8,7 @@ output: html_document
 ```{r echo=FALSE, message = FALSE, eval = FALSE}
 rmarkdown::render("README.Rmd",
     output_format = "github_document",
-    output_dir = "../",
+    output_dir = "../README.md",
     output_options = list(
         html_preview = FALSE,
         toc = TRUE, 
@@ -35,6 +35,8 @@ library(data.table)
 # Data Manipulation
 library(tidyverse)
 library(dplyr)
+
+knitr::opts_chunk$set(fig.path = "../images/")
 ```
 
 The following packages were used to query the API:
