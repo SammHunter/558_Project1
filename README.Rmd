@@ -86,7 +86,7 @@ ability <- function(name, ...){
 
 ## Pokemon Type
 
-While there are 20 possible Pokemon types, I'm not interested the information offered in the shadow or unknown Pokemon. The shadow Pokemon only offers moves that are available for that Pokemon type. The unknown Pokemon only have data about the generation of game that this Pokemon type appeared in.
+While there are 20 possible Pokemon types, I'm not interested the information offered in the shadow or unknown Pokemon. The shadow Pokemon only offers moves that are available for that Pokemon type because it's not a real type of Pokemon. The shadow type aren't actual Pokemon type; they're regular Pokemon whose heart has turned to darkness. The unknown Pokemon only have data about the generation of game that this Pokemon type appeared in, but don't seem to contain any Pokemon species.
 
 For the other Pokemon types, you can query this either by numbers, 1 through 18, or with the name of the Pokemon type. The resulting tibble will only contain information about the Pokemon and the type it is. Some Pokemon do have more than one type.
 
