@@ -326,7 +326,7 @@ poke_stats <- function(name, ...){
 
 ## Generating Data Sets
 
-I only want to analyze the [first 898 Pokemon](https://www.wargamer.com/pokemon-trading-card-game/how-many-pokemon-are-there). The PokeAPI is structured so that the first 898 Pokemon are the strictly unique species, while the rest are types of the species that may have a different regional form or are evolved in a special way that grants them special base stats. I only wanted to analyze the base stats from 'normal' wild Pokemon. Because I want to see if there is a [power creep](https://tvtropes.org/pmwiki/pmwiki.php/Main/PowerCreep) as the Pokemon world was built, and not as the player can manipulate their caught Pokemon. I will also do some general exploration of the Pokemon attributes. 
+I only want to analyze the [first 898 Pokemon](https://www.wargamer.com/pokemon-trading-card-game/how-many-pokemon-are-there). The PokeAPI is structured so that the first 898 Pokemon are the strictly unique species, while the rest are types of the species that may have a different regional form or are evolved in a special way that grants them special base stats. I only wanted to analyze the base stats from 'normal' wild Pokemon. Because I want to see if there is a [power creep](https://tvtropes.org/pmwiki/pmwiki.php/Main/PowerCreep) as the Pokemon world was built, and not as the player can manipulate their caught Pokemon. Just by virtue of being trained by a Pokemon trainer, those Pokemon are stronger than the wild Pokemon. I will also do some general exploration of the Pokemon attributes. 
 
 
 ```{r}
